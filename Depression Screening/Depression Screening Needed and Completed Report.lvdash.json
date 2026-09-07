@@ -1,0 +1,763 @@
+{
+  "datasets": [
+    {
+      "name": "depression_screening",
+      "displayName": "Depression Screening Data",
+      "config": {
+        "version": "1.1",
+        "source": "workspace.default.depression_screening_report",
+        "dimensions": [
+          {
+            "name": "Last_Name",
+            "expr": "Last_Name",
+            "displayName": "Last Name"
+          },
+          {
+            "name": "First_Name",
+            "expr": "First_Name",
+            "displayName": "First Name"
+          },
+          {
+            "name": "MRN",
+            "expr": "MRN",
+            "displayName": "Medical Record Number"
+          },
+          {
+            "name": "DOB",
+            "expr": "DOB",
+            "displayName": "Date of Birth"
+          },
+          {
+            "name": "Sex_At_Birth",
+            "expr": "Sex_At_Birth",
+            "displayName": "Sex at Birth"
+          },
+          {
+            "name": "Appointment_Date_Time",
+            "expr": "Appointment_Date_Time",
+            "displayName": "Appointment Date/Time"
+          },
+          {
+            "name": "Appointment_Location",
+            "expr": "Appointment_Location",
+            "displayName": "Appointment Location"
+          },
+          {
+            "name": "Appointment_Provider_Resource",
+            "expr": "Appointment_Provider_Resource",
+            "displayName": "Provider"
+          },
+          {
+            "name": "Depression_Screening_Completed",
+            "expr": "Depression_Screening_Completed",
+            "displayName": "Screening Completed"
+          },
+          {
+            "name": "Screening_Tool_Used",
+            "expr": "Screening_Tool_Used",
+            "displayName": "Screening Tool"
+          },
+          {
+            "name": "Plan_Date",
+            "expr": "Plan_Date",
+            "displayName": "Plan Date"
+          }
+        ],
+        "measures": [
+          {
+            "name": "Total_Patients",
+            "expr": "COUNT(DISTINCT MRN)",
+            "displayName": "Total Patients"
+          },
+          {
+            "name": "Patient_Count",
+            "expr": "COUNT(1)",
+            "displayName": "Patient Count"
+          },
+          {
+            "name": "Screenings_Completed_Count",
+            "expr": "COUNT(CASE WHEN Depression_Screening_Completed = 'Yes' THEN 1 END)",
+            "displayName": "Screenings Completed"
+          },
+          {
+            "name": "Screenings_Needed_Count",
+            "expr": "COUNT(CASE WHEN Depression_Screening_Completed = 'No' THEN 1 END)",
+            "displayName": "Screenings Needed"
+          }
+        ]
+      }
+    }
+  ],
+  "pages": [
+    {
+      "name": "dc3d22db",
+      "displayName": "Page 1",
+      "layout": [
+        {
+          "widget": {
+            "name": "total_patients",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "depression_screening",
+                  "fields": [
+                    {
+                      "name": "measure(Total_Patients)",
+                      "expression": "MEASURE(`Total_Patients`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "frame": {
+                "showTitle": true,
+                "title": "Total Patients"
+              },
+              "version": 2,
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "measure(Total_Patients)",
+                  "rowNumber": 0
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 1,
+            "width": 3,
+            "height": 2
+          }
+        },
+        {
+          "widget": {
+            "name": "completed_count",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "depression_screening",
+                  "fields": [
+                    {
+                      "name": "measure(Screenings_Completed_Count)",
+                      "expression": "MEASURE(`Screenings_Completed_Count`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "frame": {
+                "showTitle": true,
+                "title": "Screenings Completed"
+              },
+              "version": 2,
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "measure(Screenings_Completed_Count)",
+                  "rowNumber": 0
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 3,
+            "y": 1,
+            "width": 3,
+            "height": 2
+          }
+        },
+        {
+          "widget": {
+            "name": "needed_count",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "depression_screening",
+                  "fields": [
+                    {
+                      "name": "measure(Screenings_Needed_Count)",
+                      "expression": "MEASURE(`Screenings_Needed_Count`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "frame": {
+                "showTitle": true,
+                "title": "Screenings Needed"
+              },
+              "version": 2,
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "measure(Screenings_Needed_Count)",
+                  "rowNumber": 0
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 6,
+            "y": 1,
+            "width": 3,
+            "height": 2
+          }
+        },
+        {
+          "widget": {
+            "name": "patient_count",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "depression_screening",
+                  "fields": [
+                    {
+                      "name": "measure(Patient_Count)",
+                      "expression": "MEASURE(`Patient_Count`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "frame": {
+                "showTitle": true,
+                "title": "Total Records"
+              },
+              "version": 2,
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "measure(Patient_Count)",
+                  "rowNumber": 0
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 9,
+            "y": 1,
+            "width": 3,
+            "height": 2
+          }
+        },
+        {
+          "widget": {
+            "name": "status_by_location",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "depression_screening",
+                  "fields": [
+                    {
+                      "name": "Depression_Screening_Completed",
+                      "expression": "`Depression_Screening_Completed`"
+                    },
+                    {
+                      "name": "Appointment_Location",
+                      "expression": "`Appointment_Location`"
+                    },
+                    {
+                      "name": "measure(Patient_Count)",
+                      "expression": "MEASURE(`Patient_Count`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "frame": {
+                "showTitle": true,
+                "title": {
+                  "value": "Screening Status by Location",
+                  "fields": []
+                }
+              },
+              "version": 3,
+              "widgetType": "bar",
+              "encodings": {
+                "x": {
+                  "fieldName": "Appointment_Location",
+                  "displayName": "Appointment_Location",
+                  "scale": {
+                    "type": "categorical"
+                  }
+                },
+                "y": {
+                  "fieldName": "measure(Patient_Count)",
+                  "displayName": "Patient_Count",
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                },
+                "color": {
+                  "fieldName": "Depression_Screening_Completed",
+                  "displayName": "Appointment_Location",
+                  "scale": {
+                    "type": "categorical",
+                    "mappings": [
+                      {
+                        "value": "No",
+                        "color": {
+                          "themeColorType": "visualizationColors",
+                          "position": 9
+                        }
+                      },
+                      {
+                        "value": "Yes",
+                        "color": {
+                          "themeColorType": "selectionColor"
+                        }
+                      }
+                    ]
+                  }
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 4,
+            "y": 3,
+            "width": 8,
+            "height": 4
+          }
+        },
+        {
+          "widget": {
+            "name": "tools_distribution",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "depression_screening",
+                  "fields": [
+                    {
+                      "name": "Screening_Tool_Used",
+                      "expression": "`Screening_Tool_Used`"
+                    },
+                    {
+                      "name": "measure(Patient_Count)",
+                      "expression": "MEASURE(`Patient_Count`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "frame": {
+                "showTitle": true,
+                "title": {
+                  "value": "Screening Tools Distribution",
+                  "fields": []
+                }
+              },
+              "version": 3,
+              "widgetType": "bar",
+              "encodings": {
+                "x": {
+                  "fieldName": "Screening_Tool_Used",
+                  "displayName": "Screening_Tool_Used",
+                  "scale": {
+                    "type": "categorical"
+                  }
+                },
+                "y": {
+                  "fieldName": "measure(Patient_Count)",
+                  "displayName": "Patient_Count",
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                },
+                "color": {
+                  "fieldName": "Screening_Tool_Used",
+                  "displayName": "Screening_Tool_Used",
+                  "scale": {
+                    "type": "categorical",
+                    "mappings": [
+                      {
+                        "value": null,
+                        "color": {
+                          "themeColorType": "visualizationColors",
+                          "position": 9
+                        }
+                      }
+                    ]
+                  }
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 7,
+            "width": 6,
+            "height": 4
+          }
+        },
+        {
+          "widget": {
+            "name": "demographics_sex",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "depression_screening",
+                  "fields": [
+                    {
+                      "name": "Depression_Screening_Completed",
+                      "expression": "`Depression_Screening_Completed`"
+                    },
+                    {
+                      "name": "Sex_At_Birth",
+                      "expression": "`Sex_At_Birth`"
+                    },
+                    {
+                      "name": "measure(Patient_Count)",
+                      "expression": "MEASURE(`Patient_Count`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "frame": {
+                "showTitle": true,
+                "title": {
+                  "value": "Screening Completion by Sex",
+                  "fields": []
+                }
+              },
+              "version": 3,
+              "widgetType": "bar",
+              "encodings": {
+                "x": {
+                  "fieldName": "Sex_At_Birth",
+                  "displayName": "Sex_At_Birth",
+                  "scale": {
+                    "type": "categorical"
+                  }
+                },
+                "y": {
+                  "fieldName": "measure(Patient_Count)",
+                  "displayName": "Patient_Count",
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                },
+                "color": {
+                  "fieldName": "Depression_Screening_Completed",
+                  "displayName": "Sex_At_Birth",
+                  "scale": {
+                    "type": "categorical",
+                    "mappings": [
+                      {
+                        "value": "Yes",
+                        "color": {
+                          "themeColorType": "selectionColor"
+                        }
+                      },
+                      {
+                        "value": "No",
+                        "color": {
+                          "themeColorType": "visualizationColors",
+                          "position": 9
+                        }
+                      }
+                    ]
+                  }
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 6,
+            "y": 7,
+            "width": 6,
+            "height": 4
+          }
+        },
+        {
+          "widget": {
+            "name": "patient_list",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "depression_screening",
+                  "fields": [
+                    {
+                      "name": "Last_Name",
+                      "expression": "`Last_Name`"
+                    },
+                    {
+                      "name": "First_Name",
+                      "expression": "`First_Name`"
+                    },
+                    {
+                      "name": "MRN",
+                      "expression": "`MRN`"
+                    },
+                    {
+                      "name": "DOB",
+                      "expression": "`DOB`"
+                    },
+                    {
+                      "name": "Sex_At_Birth",
+                      "expression": "`Sex_At_Birth`"
+                    },
+                    {
+                      "name": "Appointment_Date_Time",
+                      "expression": "`Appointment_Date_Time`"
+                    },
+                    {
+                      "name": "Appointment_Location",
+                      "expression": "`Appointment_Location`"
+                    },
+                    {
+                      "name": "Appointment_Provider_Resource",
+                      "expression": "`Appointment_Provider_Resource`"
+                    },
+                    {
+                      "name": "Depression_Screening_Completed",
+                      "expression": "`Depression_Screening_Completed`"
+                    },
+                    {
+                      "name": "Screening_Tool_Used",
+                      "expression": "`Screening_Tool_Used`"
+                    },
+                    {
+                      "name": "Plan_Date",
+                      "expression": "`Plan_Date`"
+                    }
+                  ],
+                  "disaggregated": true
+                }
+              }
+            ],
+            "spec": {
+              "frame": {
+                "showTitle": true,
+                "title": {
+                  "value": "Detailed Patient List",
+                  "fields": []
+                }
+              },
+              "version": 2,
+              "widgetType": "table",
+              "encodings": {
+                "columns": [
+                  {
+                    "fieldName": "Last_Name"
+                  },
+                  {
+                    "fieldName": "First_Name"
+                  },
+                  {
+                    "fieldName": "MRN"
+                  },
+                  {
+                    "fieldName": "DOB"
+                  },
+                  {
+                    "fieldName": "Sex_At_Birth"
+                  },
+                  {
+                    "fieldName": "Appointment_Date_Time"
+                  },
+                  {
+                    "fieldName": "Appointment_Location"
+                  },
+                  {
+                    "fieldName": "Appointment_Provider_Resource"
+                  },
+                  {
+                    "fieldName": "Depression_Screening_Completed"
+                  },
+                  {
+                    "fieldName": "Screening_Tool_Used"
+                  },
+                  {
+                    "fieldName": "Plan_Date"
+                  }
+                ]
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 11,
+            "width": 12,
+            "height": 6
+          }
+        },
+        {
+          "widget": {
+            "name": "status_donut",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "depression_screening",
+                  "fields": [
+                    {
+                      "name": "measure(Patient_Count)",
+                      "expression": "MEASURE(`Patient_Count`)"
+                    },
+                    {
+                      "name": "Depression_Screening_Completed",
+                      "expression": "`Depression_Screening_Completed`"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "frame": {
+                "showTitle": true,
+                "title": {
+                  "value": "Screening Status Overview",
+                  "fields": []
+                }
+              },
+              "version": 3,
+              "widgetType": "pie",
+              "encodings": {
+                "angle": {
+                  "fieldName": "measure(Patient_Count)",
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                },
+                "color": {
+                  "fieldName": "Depression_Screening_Completed",
+                  "scale": {
+                    "type": "categorical",
+                    "mappings": [
+                      {
+                        "value": "Yes",
+                        "color": {
+                          "themeColorType": "selectionColor"
+                        }
+                      },
+                      {
+                        "value": "No",
+                        "color": {
+                          "themeColorType": "visualizationColors",
+                          "position": 9
+                        }
+                      }
+                    ]
+                  }
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 3,
+            "width": 4,
+            "height": 4
+          }
+        },
+        {
+          "widget": {
+            "name": "screening_status_filter",
+            "queries": [
+              {
+                "name": "dashboards/01f1a6b507501db9a393dc0d826eaa30/datasets/01f1a6b565621612a31a5554bc4482f2_Depression_Screening_Completed",
+                "query": {
+                  "datasetName": "depression_screening",
+                  "fields": [
+                    {
+                      "name": "Depression_Screening_Completed",
+                      "expression": "`Depression_Screening_Completed`"
+                    },
+                    {
+                      "name": "Depression_Screening_Completed_associativity",
+                      "expression": "COUNT_IF(`associative_filter_predicate_group`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "frame": {
+                "showTitle": true,
+                "title": "Filter by Screening Status"
+              },
+              "widgetType": "filter-multi-select",
+              "encodings": {
+                "fields": [
+                  {
+                    "fieldName": "Depression_Screening_Completed",
+                    "queryName": "dashboards/01f1a6b507501db9a393dc0d826eaa30/datasets/01f1a6b565621612a31a5554bc4482f2_Depression_Screening_Completed"
+                  }
+                ]
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 0,
+            "width": 12,
+            "height": 1
+          }
+        }
+      ],
+      "pageType": "PAGE_TYPE_CANVAS",
+      "layoutVersion": "GRID_V1"
+    }
+  ],
+  "uiSettings": {
+    "theme": {
+      "widgetHeaderAlignment": "ALIGNMENT_UNSPECIFIED"
+    },
+    "applyModeEnabled": false
+  }
+}

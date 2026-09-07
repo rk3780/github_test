@@ -1,0 +1,644 @@
+{
+  "datasets": [
+    {
+      "name": "b5be127f",
+      "displayName": "Reports Dataset",
+      "queryLines": [
+        "SELECT \r\n",
+        "    report_id,\r\n",
+        "    report_category,\r\n",
+        "    report_title,\r\n",
+        "    generated_by,\r\n",
+        "    generated_on,\r\n",
+        "    report_type,\r\n",
+        "    schedule_name,\r\n",
+        "    status,\r\n",
+        "    CASE \r\n",
+        "        WHEN download_link = 'link' THEN '📥' \r\n",
+        "    END AS download_link,\r\n",
+        "    CASE \r\n",
+        "        WHEN delete_flag = 'No' THEN '🗑️' \r\n",
+        "    END AS delete_flag\r\n",
+        "FROM workspace.default.reports\r\n",
+        "limit :row_limit;"
+      ],
+      "parameters": [
+        {
+          "displayName": "row_limit",
+          "keyword": "row_limit",
+          "dataType": "INTEGER",
+          "defaultSelection": {
+            "values": {
+              "dataType": "INTEGER",
+              "values": [
+                {
+                  "value": "10"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "fe4a00db",
+      "displayName": "Scheduled Reports Dataset",
+      "queryLines": [
+        "SELECT\r\n",
+        "    report_id,\r\n",
+        "    report_category,\r\n",
+        "    report_title,\r\n",
+        "    schedule_name,\r\n",
+        "    scheduled_by,\r\n",
+        "    scheduled_time,\r\n",
+        "    frequency,\r\n",
+        "    updated_on_by,\r\n",
+        "    last_delivery,\r\n",
+        "    case when pause_schedule = 'Pause' then '▶️ Pause'\r\n",
+        "        when pause_schedule = 'Paused' then '⏸ Paused' END as pause_schedule,\r\n",
+        "    '▶️ Generate' as action,           \r\n",
+        "    '✏️' as edit_flag,        \r\n",
+        "    '🗑️' as delete_flag       \r\n",
+        "FROM workspace.default.scheduled_reports\r\n",
+        "limit :row_limit;"
+      ],
+      "parameters": [
+        {
+          "displayName": "row_limit",
+          "keyword": "row_limit",
+          "dataType": "INTEGER",
+          "defaultSelection": {
+            "values": {
+              "dataType": "INTEGER",
+              "values": [
+                {
+                  "value": "10"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "233545b7",
+      "displayName": "Combined Dataset",
+      "queryLines": [
+        "SELECT \r\n",
+        "    report_id,\r\n",
+        "    report_category,\r\n",
+        "    report_title,\r\n",
+        "    generated_by,\r\n",
+        "    generated_on,\r\n",
+        "    report_type,\r\n",
+        "    schedule_name,\r\n",
+        "    status,\r\n",
+        "    CASE \r\n",
+        "        WHEN download_link = 'link' THEN '📥' \r\n",
+        "    END AS download_link,\r\n",
+        "    CASE \r\n",
+        "        WHEN delete_flag = 'No' THEN '🗑️' \r\n",
+        "    END AS delete_flag\r\n",
+        "FROM workspace.default.reports\r\n",
+        "where :switch_to = 'Generated Reports'\r\n",
+        "limit :row_limit;\r\n",
+        "\r\n",
+        "\r\n",
+        "\r\n",
+        "\r\n",
+        "SELECT\r\n",
+        "    report_id,\r\n",
+        "    report_category,\r\n",
+        "    report_title,\r\n",
+        "    schedule_name,\r\n",
+        "    scheduled_by,\r\n",
+        "    scheduled_time,\r\n",
+        "    frequency,\r\n",
+        "    updated_on_by,\r\n",
+        "    last_delivery,\r\n",
+        "    case when pause_schedule = 'Pause' then '▶️ Pause'\r\n",
+        "        when pause_schedule = 'Paused' then '⏸ Paused' END as pause_schedule,\r\n",
+        "    '▶️ Generate' as action,           \r\n",
+        "    '✏️' as edit_flag,        \r\n",
+        "    '🗑️' as delete_flag       \r\n",
+        "FROM workspace.default.scheduled_reports\r\n",
+        "where :switch_to = 'Practice Scheduled Reports'\r\n",
+        "limit :row_limit;"
+      ],
+      "parameters": [
+        {
+          "displayName": "row_limit",
+          "keyword": "row_limit",
+          "dataType": "INTEGER",
+          "defaultSelection": {
+            "values": {
+              "dataType": "INTEGER",
+              "values": [
+                {
+                  "value": "10"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "displayName": "switch_to",
+          "keyword": "switch_to",
+          "dataType": "STRING",
+          "defaultSelection": {
+            "values": {
+              "dataType": "STRING",
+              "values": [
+                {
+                  "value": "Generated Reports"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "pages": [
+    {
+      "name": "6aa33cf0",
+      "displayName": "Generated Reports",
+      "layout": [
+        {
+          "widget": {
+            "name": "generated-reports",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "b5be127f",
+                  "fields": [
+                    {
+                      "name": "report_category",
+                      "expression": "`report_category`"
+                    },
+                    {
+                      "name": "report_title",
+                      "expression": "`report_title`"
+                    },
+                    {
+                      "name": "generated_by",
+                      "expression": "`generated_by`"
+                    },
+                    {
+                      "name": "generated_on",
+                      "expression": "`generated_on`"
+                    },
+                    {
+                      "name": "report_type",
+                      "expression": "`report_type`"
+                    },
+                    {
+                      "name": "schedule_name",
+                      "expression": "`schedule_name`"
+                    },
+                    {
+                      "name": "status",
+                      "expression": "`status`"
+                    },
+                    {
+                      "name": "download_link",
+                      "expression": "`download_link`"
+                    },
+                    {
+                      "name": "delete_flag",
+                      "expression": "`delete_flag`"
+                    }
+                  ],
+                  "disaggregated": true
+                }
+              }
+            ],
+            "spec": {
+              "frame": {
+                "showTitle": true,
+                "title": {
+                  "value": "Generated Reports",
+                  "fields": []
+                }
+              },
+              "version": 2,
+              "widgetType": "table",
+              "encodings": {
+                "columns": [
+                  {
+                    "fieldName": "report_category",
+                    "displayName": "Report Category"
+                  },
+                  {
+                    "fieldName": "report_title",
+                    "displayName": "Report Title"
+                  },
+                  {
+                    "fieldName": "generated_by",
+                    "displayName": "Generated By"
+                  },
+                  {
+                    "fieldName": "generated_on",
+                    "displayName": "Generated On"
+                  },
+                  {
+                    "fieldName": "report_type",
+                    "displayName": "Report Type"
+                  },
+                  {
+                    "fieldName": "schedule_name",
+                    "displayName": "Schedule Name"
+                  },
+                  {
+                    "fieldName": "status",
+                    "displayName": "Status"
+                  },
+                  {
+                    "fieldName": "download_link",
+                    "displayName": "Download Link"
+                  },
+                  {
+                    "fieldName": "delete_flag",
+                    "displayName": "Delete Flag"
+                  }
+                ]
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 1,
+            "width": 12,
+            "height": 6
+          }
+        },
+        {
+          "widget": {
+            "name": "search",
+            "queries": [
+              {
+                "name": "dashboards/01f1a76a8d1b140fa4353ccc968656ed/datasets/01f1a76b3eb31ae9bbcfe6e1cb5856f7_report_title",
+                "query": {
+                  "datasetName": "b5be127f",
+                  "fields": [
+                    {
+                      "name": "report_title",
+                      "expression": "`report_title`"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "frame": {
+                "showTitle": true,
+                "title": {
+                  "value": "Search",
+                  "fields": []
+                }
+              },
+              "widgetType": "filter-text-entry",
+              "encodings": {
+                "fields": [
+                  {
+                    "fieldName": "report_title",
+                    "queryName": "dashboards/01f1a76a8d1b140fa4353ccc968656ed/datasets/01f1a76b3eb31ae9bbcfe6e1cb5856f7_report_title"
+                  }
+                ]
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 0,
+            "width": 4,
+            "height": 1
+          }
+        },
+        {
+          "widget": {
+            "name": "row_limit",
+            "queries": [
+              {
+                "name": "parameter_dashboards/01f1a76a8d1b140fa4353ccc968656ed/datasets/01f1a76b3eb31ae9bbcfe6e1cb5856f7_row_limit",
+                "query": {
+                  "datasetName": "b5be127f",
+                  "parameters": [
+                    {
+                      "name": "row_limit",
+                      "keyword": "row_limit"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "selection": {
+                "defaultSelection": {
+                  "values": {
+                    "dataType": "INTEGER",
+                    "values": [
+                      {
+                        "value": "10"
+                      }
+                    ]
+                  }
+                }
+              },
+              "frame": {
+                "showTitle": true,
+                "showDescription": false,
+                "title": {
+                  "value": "row\\_limit",
+                  "fields": []
+                }
+              },
+              "widgetType": "filter-single-select",
+              "encodings": {
+                "fields": [
+                  {
+                    "parameterName": "row_limit",
+                    "queryName": "parameter_dashboards/01f1a76a8d1b140fa4353ccc968656ed/datasets/01f1a76b3eb31ae9bbcfe6e1cb5856f7_row_limit"
+                  }
+                ]
+              }
+            }
+          },
+          "position": {
+            "x": 10,
+            "y": 0,
+            "width": 2,
+            "height": 1
+          }
+        }
+      ],
+      "pageType": "PAGE_TYPE_CANVAS",
+      "layoutVersion": "GRID_V1"
+    },
+    {
+      "name": "b010418a",
+      "displayName": "Practice Scheduled Reports",
+      "layout": [
+        {
+          "widget": {
+            "name": "search",
+            "queries": [
+              {
+                "name": "dashboards/01f1a76a8d1b140fa4353ccc968656ed/datasets/01f1a78269fb1b1e9f332494cc1b39e9_report_title",
+                "query": {
+                  "datasetName": "fe4a00db",
+                  "fields": [
+                    {
+                      "name": "report_title",
+                      "expression": "`report_title`"
+                    },
+                    {
+                      "name": "report_title_associativity",
+                      "expression": "COUNT_IF(`associative_filter_predicate_group`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "frame": {
+                "showTitle": true,
+                "title": {
+                  "value": "Search",
+                  "fields": []
+                }
+              },
+              "widgetType": "filter-single-select",
+              "encodings": {
+                "fields": [
+                  {
+                    "fieldName": "report_title",
+                    "queryName": "dashboards/01f1a76a8d1b140fa4353ccc968656ed/datasets/01f1a78269fb1b1e9f332494cc1b39e9_report_title"
+                  }
+                ]
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 0,
+            "width": 4,
+            "height": 1
+          }
+        },
+        {
+          "widget": {
+            "name": "practice-scheduled-reports",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "fe4a00db",
+                  "fields": [
+                    {
+                      "name": "report_category",
+                      "expression": "`report_category`"
+                    },
+                    {
+                      "name": "report_title",
+                      "expression": "`report_title`"
+                    },
+                    {
+                      "name": "schedule_name",
+                      "expression": "`schedule_name`"
+                    },
+                    {
+                      "name": "scheduled_by",
+                      "expression": "`scheduled_by`"
+                    },
+                    {
+                      "name": "scheduled_time",
+                      "expression": "`scheduled_time`"
+                    },
+                    {
+                      "name": "frequency",
+                      "expression": "`frequency`"
+                    },
+                    {
+                      "name": "updated_on_by",
+                      "expression": "`updated_on_by`"
+                    },
+                    {
+                      "name": "last_delivery",
+                      "expression": "`last_delivery`"
+                    },
+                    {
+                      "name": "pause_schedule",
+                      "expression": "`pause_schedule`"
+                    },
+                    {
+                      "name": "action",
+                      "expression": "`action`"
+                    },
+                    {
+                      "name": "edit_flag",
+                      "expression": "`edit_flag`"
+                    },
+                    {
+                      "name": "delete_flag",
+                      "expression": "`delete_flag`"
+                    }
+                  ],
+                  "disaggregated": true
+                }
+              }
+            ],
+            "spec": {
+              "frame": {
+                "showTitle": true,
+                "title": {
+                  "value": "Practice Scheduled Reports",
+                  "fields": []
+                }
+              },
+              "version": 2,
+              "widgetType": "table",
+              "encodings": {
+                "columns": [
+                  {
+                    "fieldName": "report_category",
+                    "displayName": "Report Category"
+                  },
+                  {
+                    "fieldName": "report_title",
+                    "displayName": "Report Title"
+                  },
+                  {
+                    "fieldName": "schedule_name",
+                    "displayName": "Schedule Name"
+                  },
+                  {
+                    "fieldName": "scheduled_by",
+                    "displayName": "Schedule By"
+                  },
+                  {
+                    "fieldName": "scheduled_time",
+                    "displayName": "Schedule Time"
+                  },
+                  {
+                    "fieldName": "frequency",
+                    "displayName": "Frequency"
+                  },
+                  {
+                    "fieldName": "updated_on_by",
+                    "displayName": "Updated On (by)"
+                  },
+                  {
+                    "fieldName": "last_delivery",
+                    "displayName": "Last Delivery"
+                  },
+                  {
+                    "fieldName": "pause_schedule",
+                    "displayName": "Pause Scheduled"
+                  },
+                  {
+                    "fieldName": "action",
+                    "displayName": "Action"
+                  },
+                  {
+                    "fieldName": "edit_flag",
+                    "displayName": "Edit"
+                  },
+                  {
+                    "fieldName": "delete_flag",
+                    "displayName": "Delete"
+                  }
+                ]
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 1,
+            "width": 12,
+            "height": 6
+          }
+        },
+        {
+          "widget": {
+            "name": "dfe86553",
+            "queries": [
+              {
+                "name": "parameter_dashboards/01f1a76a8d1b140fa4353ccc968656ed/datasets/01f1a78269fb1b1e9f332494cc1b39e9_row_limit",
+                "query": {
+                  "datasetName": "fe4a00db",
+                  "parameters": [
+                    {
+                      "name": "row_limit",
+                      "keyword": "row_limit"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "selection": {
+                "defaultSelection": {
+                  "values": {
+                    "dataType": "INTEGER",
+                    "values": [
+                      {
+                        "value": "10"
+                      }
+                    ]
+                  }
+                }
+              },
+              "frame": {
+                "showTitle": true,
+                "showDescription": false,
+                "title": {
+                  "value": "row\\_limit",
+                  "fields": []
+                }
+              },
+              "widgetType": "filter-single-select",
+              "encodings": {
+                "fields": [
+                  {
+                    "parameterName": "row_limit",
+                    "queryName": "parameter_dashboards/01f1a76a8d1b140fa4353ccc968656ed/datasets/01f1a78269fb1b1e9f332494cc1b39e9_row_limit"
+                  }
+                ]
+              }
+            }
+          },
+          "position": {
+            "x": 10,
+            "y": 0,
+            "width": 2,
+            "height": 1
+          }
+        }
+      ],
+      "pageType": "PAGE_TYPE_CANVAS",
+      "layoutVersion": "GRID_V1"
+    }
+  ],
+  "uiSettings": {
+    "theme": {
+      "widgetHeaderAlignment": "ALIGNMENT_UNSPECIFIED"
+    },
+    "applyModeEnabled": false
+  }
+}

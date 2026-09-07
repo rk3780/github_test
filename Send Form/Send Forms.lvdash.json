@@ -1,0 +1,835 @@
+{
+  "datasets": [
+    {
+      "name": "patients",
+      "displayName": "Patients",
+      "queryLines": [
+        "SELECT\n",
+        "  *\n",
+        "FROM\n",
+        "  workspace.default.send_forms_patients"
+      ]
+    },
+    {
+      "name": "forms",
+      "displayName": "Forms",
+      "queryLines": [
+        "SELECT\n",
+        "  *\n",
+        "FROM\n",
+        "  workspace.default.send_forms_forms"
+      ]
+    }
+  ],
+  "pages": [
+    {
+      "name": "3d6abf0a",
+      "displayName": "1. Select Patients",
+      "layout": [
+        {
+          "widget": {
+            "name": "step1_instructions",
+            "multilineTextboxSpec": {
+              "lines": [
+                "## Step 1: Select Patients\n",
+                "\n",
+                "Use the filter fields below to find patients to send forms to. Filter by Provider, Location, Appointment Date Range, and/or Appointment Type.\n",
+                "\n",
+                "**Note:** In a full application, you would check boxes for each patient. This dashboard shows the filtered patient list."
+              ]
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 0,
+            "width": 12,
+            "height": 3
+          }
+        },
+        {
+          "widget": {
+            "name": "provider_filter",
+            "queries": [
+              {
+                "name": "dashboards/01f1a69fa4f011cf8398cccd76a0ec4a/datasets/01f1a6aafb761026b0478b7926b5c3d0_provider_name",
+                "query": {
+                  "datasetName": "patients",
+                  "fields": [
+                    {
+                      "name": "provider_name",
+                      "expression": "`provider_name`"
+                    },
+                    {
+                      "name": "provider_name_associativity",
+                      "expression": "COUNT_IF(`associative_filter_predicate_group`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "frame": {
+                "showTitle": true,
+                "title": {
+                  "value": "Provider Filter",
+                  "fields": []
+                }
+              },
+              "widgetType": "filter-multi-select",
+              "encodings": {
+                "fields": [
+                  {
+                    "fieldName": "provider_name",
+                    "queryName": "dashboards/01f1a69fa4f011cf8398cccd76a0ec4a/datasets/01f1a6aafb761026b0478b7926b5c3d0_provider_name"
+                  }
+                ]
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 3,
+            "width": 3,
+            "height": 4
+          }
+        },
+        {
+          "widget": {
+            "name": "location_filter",
+            "queries": [
+              {
+                "name": "dashboards/01f1a69fa4f011cf8398cccd76a0ec4a/datasets/01f1a6aafb761026b0478b7926b5c3d0_location_name",
+                "query": {
+                  "datasetName": "patients",
+                  "fields": [
+                    {
+                      "name": "location_name",
+                      "expression": "`location_name`"
+                    },
+                    {
+                      "name": "location_name_associativity",
+                      "expression": "COUNT_IF(`associative_filter_predicate_group`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "frame": {
+                "showTitle": true,
+                "title": "Location Filter"
+              },
+              "widgetType": "filter-multi-select",
+              "encodings": {
+                "fields": [
+                  {
+                    "fieldName": "location_name",
+                    "queryName": "dashboards/01f1a69fa4f011cf8398cccd76a0ec4a/datasets/01f1a6aafb761026b0478b7926b5c3d0_location_name"
+                  }
+                ]
+              }
+            }
+          },
+          "position": {
+            "x": 3,
+            "y": 3,
+            "width": 3,
+            "height": 4
+          }
+        },
+        {
+          "widget": {
+            "name": "appointment_type_filter",
+            "queries": [
+              {
+                "name": "dashboards/01f1a69fa4f011cf8398cccd76a0ec4a/datasets/01f1a6aafb761026b0478b7926b5c3d0_appointment_type",
+                "query": {
+                  "datasetName": "patients",
+                  "fields": [
+                    {
+                      "name": "appointment_type",
+                      "expression": "`appointment_type`"
+                    },
+                    {
+                      "name": "appointment_type_associativity",
+                      "expression": "COUNT_IF(`associative_filter_predicate_group`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "frame": {
+                "showTitle": true,
+                "title": "Appointment Type Filter"
+              },
+              "widgetType": "filter-multi-select",
+              "encodings": {
+                "fields": [
+                  {
+                    "fieldName": "appointment_type",
+                    "queryName": "dashboards/01f1a69fa4f011cf8398cccd76a0ec4a/datasets/01f1a6aafb761026b0478b7926b5c3d0_appointment_type"
+                  }
+                ]
+              }
+            }
+          },
+          "position": {
+            "x": 6,
+            "y": 3,
+            "width": 3,
+            "height": 4
+          }
+        },
+        {
+          "widget": {
+            "name": "appointment_date_filter",
+            "queries": [
+              {
+                "name": "dashboards/01f1a69fa4f011cf8398cccd76a0ec4a/datasets/01f1a6aafb761026b0478b7926b5c3d0_next_appointment",
+                "query": {
+                  "datasetName": "patients",
+                  "fields": [
+                    {
+                      "name": "next_appointment",
+                      "expression": "`next_appointment`"
+                    },
+                    {
+                      "name": "next_appointment_associativity",
+                      "expression": "COUNT_IF(`associative_filter_predicate_group`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "frame": {
+                "showTitle": true,
+                "title": "Appointment Date Range"
+              },
+              "widgetType": "filter-date-range-picker",
+              "encodings": {
+                "fields": [
+                  {
+                    "fieldName": "next_appointment",
+                    "queryName": "dashboards/01f1a69fa4f011cf8398cccd76a0ec4a/datasets/01f1a6aafb761026b0478b7926b5c3d0_next_appointment"
+                  }
+                ]
+              }
+            }
+          },
+          "position": {
+            "x": 9,
+            "y": 3,
+            "width": 3,
+            "height": 4
+          }
+        },
+        {
+          "widget": {
+            "name": "patients_table",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "patients",
+                  "fields": [
+                    {
+                      "name": "patient_name",
+                      "expression": "`patient_name`"
+                    },
+                    {
+                      "name": "mrn",
+                      "expression": "`mrn`"
+                    },
+                    {
+                      "name": "date_of_birth",
+                      "expression": "`date_of_birth`"
+                    },
+                    {
+                      "name": "age",
+                      "expression": "`age`"
+                    },
+                    {
+                      "name": "provider_name",
+                      "expression": "`provider_name`"
+                    },
+                    {
+                      "name": "location_name",
+                      "expression": "`location_name`"
+                    },
+                    {
+                      "name": "next_appointment",
+                      "expression": "`next_appointment`"
+                    },
+                    {
+                      "name": "appointment_type",
+                      "expression": "`appointment_type`"
+                    }
+                  ],
+                  "disaggregated": true
+                }
+              }
+            ],
+            "spec": {
+              "frame": {
+                "showTitle": true,
+                "title": "Available Patients"
+              },
+              "version": 2,
+              "widgetType": "table",
+              "encodings": {
+                "columns": [
+                  {
+                    "fieldName": "patient_name"
+                  },
+                  {
+                    "fieldName": "mrn"
+                  },
+                  {
+                    "fieldName": "date_of_birth"
+                  },
+                  {
+                    "fieldName": "age"
+                  },
+                  {
+                    "fieldName": "provider_name"
+                  },
+                  {
+                    "fieldName": "location_name"
+                  },
+                  {
+                    "fieldName": "next_appointment"
+                  },
+                  {
+                    "fieldName": "appointment_type"
+                  }
+                ]
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 7,
+            "width": 12,
+            "height": 10
+          }
+        }
+      ],
+      "pageType": "PAGE_TYPE_CANVAS",
+      "layoutVersion": "GRID_V1"
+    },
+    {
+      "name": "select_forms",
+      "displayName": "2. Select Packets and Forms",
+      "layout": [
+        {
+          "widget": {
+            "name": "step2_instructions",
+            "multilineTextboxSpec": {
+              "lines": [
+                "## Step 2: Select Packets and Forms\n",
+                "\n",
+                "Use the filter fields below to find forms and packets to send. Filter by Location, Provider, Appointment Type, Specialty, and/or Form Packet.\n",
+                "\n",
+                "**Note:** In a full application, you would check boxes for each form. This dashboard shows the filtered forms list."
+              ]
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 0,
+            "width": 12,
+            "height": 3
+          }
+        },
+        {
+          "widget": {
+            "name": "location_filter",
+            "queries": [
+              {
+                "name": "dashboards/01f1a69fa4f011cf8398cccd76a0ec4a/datasets/01f1a6ab05c01bd782167968cbc76eb9_location_name",
+                "query": {
+                  "datasetName": "forms",
+                  "fields": [
+                    {
+                      "name": "location_name",
+                      "expression": "`location_name`"
+                    },
+                    {
+                      "name": "location_name_associativity",
+                      "expression": "COUNT_IF(`associative_filter_predicate_group`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "frame": {
+                "showTitle": true,
+                "title": "Location Filter"
+              },
+              "widgetType": "filter-multi-select",
+              "encodings": {
+                "fields": [
+                  {
+                    "fieldName": "location_name",
+                    "queryName": "dashboards/01f1a69fa4f011cf8398cccd76a0ec4a/datasets/01f1a6ab05c01bd782167968cbc76eb9_location_name"
+                  }
+                ]
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 3,
+            "width": 3,
+            "height": 4
+          }
+        },
+        {
+          "widget": {
+            "name": "provider_filter",
+            "queries": [
+              {
+                "name": "dashboards/01f1a69fa4f011cf8398cccd76a0ec4a/datasets/01f1a6ab05c01bd782167968cbc76eb9_provider_name",
+                "query": {
+                  "datasetName": "forms",
+                  "fields": [
+                    {
+                      "name": "provider_name",
+                      "expression": "`provider_name`"
+                    },
+                    {
+                      "name": "provider_name_associativity",
+                      "expression": "COUNT_IF(`associative_filter_predicate_group`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "frame": {
+                "showTitle": true,
+                "title": "Provider Filter"
+              },
+              "widgetType": "filter-multi-select",
+              "encodings": {
+                "fields": [
+                  {
+                    "fieldName": "provider_name",
+                    "queryName": "dashboards/01f1a69fa4f011cf8398cccd76a0ec4a/datasets/01f1a6ab05c01bd782167968cbc76eb9_provider_name"
+                  }
+                ]
+              }
+            }
+          },
+          "position": {
+            "x": 3,
+            "y": 3,
+            "width": 3,
+            "height": 4
+          }
+        },
+        {
+          "widget": {
+            "name": "appointment_type_filter",
+            "queries": [
+              {
+                "name": "dashboards/01f1a69fa4f011cf8398cccd76a0ec4a/datasets/01f1a6ab05c01bd782167968cbc76eb9_appointment_type",
+                "query": {
+                  "datasetName": "forms",
+                  "fields": [
+                    {
+                      "name": "appointment_type",
+                      "expression": "`appointment_type`"
+                    },
+                    {
+                      "name": "appointment_type_associativity",
+                      "expression": "COUNT_IF(`associative_filter_predicate_group`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "frame": {
+                "showTitle": true,
+                "title": "Appointment Type Filter"
+              },
+              "widgetType": "filter-multi-select",
+              "encodings": {
+                "fields": [
+                  {
+                    "fieldName": "appointment_type",
+                    "queryName": "dashboards/01f1a69fa4f011cf8398cccd76a0ec4a/datasets/01f1a6ab05c01bd782167968cbc76eb9_appointment_type"
+                  }
+                ]
+              }
+            }
+          },
+          "position": {
+            "x": 6,
+            "y": 3,
+            "width": 3,
+            "height": 4
+          }
+        },
+        {
+          "widget": {
+            "name": "specialty_filter",
+            "queries": [
+              {
+                "name": "dashboards/01f1a69fa4f011cf8398cccd76a0ec4a/datasets/01f1a6ab05c01bd782167968cbc76eb9_specialty",
+                "query": {
+                  "datasetName": "forms",
+                  "fields": [
+                    {
+                      "name": "specialty",
+                      "expression": "`specialty`"
+                    },
+                    {
+                      "name": "specialty_associativity",
+                      "expression": "COUNT_IF(`associative_filter_predicate_group`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "frame": {
+                "showTitle": true,
+                "title": "Specialty Filter"
+              },
+              "widgetType": "filter-multi-select",
+              "encodings": {
+                "fields": [
+                  {
+                    "fieldName": "specialty",
+                    "queryName": "dashboards/01f1a69fa4f011cf8398cccd76a0ec4a/datasets/01f1a6ab05c01bd782167968cbc76eb9_specialty"
+                  }
+                ]
+              }
+            }
+          },
+          "position": {
+            "x": 9,
+            "y": 3,
+            "width": 3,
+            "height": 4
+          }
+        },
+        {
+          "widget": {
+            "name": "forms_table",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "forms",
+                  "fields": [
+                    {
+                      "name": "packet_form_name",
+                      "expression": "`packet_form_name`"
+                    },
+                    {
+                      "name": "specialty",
+                      "expression": "`specialty`"
+                    },
+                    {
+                      "name": "provider_name",
+                      "expression": "`provider_name`"
+                    },
+                    {
+                      "name": "location_name",
+                      "expression": "`location_name`"
+                    },
+                    {
+                      "name": "appointment_type",
+                      "expression": "`appointment_type`"
+                    },
+                    {
+                      "name": "last_update",
+                      "expression": "`last_update`"
+                    },
+                    {
+                      "name": "version",
+                      "expression": "`version`"
+                    }
+                  ],
+                  "disaggregated": true
+                }
+              }
+            ],
+            "spec": {
+              "frame": {
+                "showTitle": true,
+                "title": "Available Forms"
+              },
+              "version": 2,
+              "widgetType": "table",
+              "encodings": {
+                "columns": [
+                  {
+                    "fieldName": "packet_form_name"
+                  },
+                  {
+                    "fieldName": "specialty"
+                  },
+                  {
+                    "fieldName": "provider_name"
+                  },
+                  {
+                    "fieldName": "location_name"
+                  },
+                  {
+                    "fieldName": "appointment_type"
+                  },
+                  {
+                    "fieldName": "last_update"
+                  },
+                  {
+                    "fieldName": "version"
+                  }
+                ]
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 7,
+            "width": 12,
+            "height": 10
+          }
+        }
+      ],
+      "pageType": "PAGE_TYPE_CANVAS",
+      "layoutVersion": "GRID_V1"
+    },
+    {
+      "name": "confirm_send",
+      "displayName": "3. Confirm & Send",
+      "layout": [
+        {
+          "widget": {
+            "name": "confirmation_message",
+            "multilineTextboxSpec": {
+              "lines": [
+                "## Step 3: Confirm & Send\n",
+                "\n",
+                "⚠️ **Important:** These forms will be sent immediately. Please confirm patient/patient group and forms before sending.\n",
+                "\n",
+                "Before sending the forms, make sure to check that the Selected Patients and the Selected Forms lists include only the patients and forms you want to send.\n",
+                "\n",
+                "**Note:** In a full application with interactive checkboxes, this would show only your selections from Steps 1 & 2. This dashboard displays all filtered data from the previous pages."
+              ]
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 0,
+            "width": 12,
+            "height": 5
+          }
+        },
+        {
+          "widget": {
+            "name": "selected_patients_table",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "patients",
+                  "fields": [
+                    {
+                      "name": "patient_name",
+                      "expression": "`patient_name`"
+                    },
+                    {
+                      "name": "mrn",
+                      "expression": "`mrn`"
+                    },
+                    {
+                      "name": "date_of_birth",
+                      "expression": "`date_of_birth`"
+                    },
+                    {
+                      "name": "provider_name",
+                      "expression": "`provider_name`"
+                    },
+                    {
+                      "name": "location_name",
+                      "expression": "`location_name`"
+                    },
+                    {
+                      "name": "next_appointment",
+                      "expression": "`next_appointment`"
+                    }
+                  ],
+                  "disaggregated": true
+                }
+              }
+            ],
+            "spec": {
+              "frame": {
+                "showTitle": true,
+                "title": {
+                  "value": "Selected Patients",
+                  "fields": []
+                }
+              },
+              "version": 2,
+              "widgetType": "table",
+              "encodings": {
+                "columns": [
+                  {
+                    "fieldName": "patient_name"
+                  },
+                  {
+                    "fieldName": "mrn"
+                  },
+                  {
+                    "fieldName": "date_of_birth"
+                  },
+                  {
+                    "fieldName": "provider_name"
+                  },
+                  {
+                    "fieldName": "location_name"
+                  },
+                  {
+                    "fieldName": "next_appointment"
+                  }
+                ]
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 5,
+            "width": 12,
+            "height": 8
+          }
+        },
+        {
+          "widget": {
+            "name": "selected_forms_table",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "forms",
+                  "fields": [
+                    {
+                      "name": "packet_form_name",
+                      "expression": "`packet_form_name`"
+                    },
+                    {
+                      "name": "specialty",
+                      "expression": "`specialty`"
+                    },
+                    {
+                      "name": "provider_name",
+                      "expression": "`provider_name`"
+                    },
+                    {
+                      "name": "location_name",
+                      "expression": "`location_name`"
+                    },
+                    {
+                      "name": "last_update",
+                      "expression": "`last_update`"
+                    },
+                    {
+                      "name": "version",
+                      "expression": "`version`"
+                    }
+                  ],
+                  "disaggregated": true
+                }
+              }
+            ],
+            "spec": {
+              "frame": {
+                "showTitle": true,
+                "title": "Selected Forms"
+              },
+              "version": 2,
+              "widgetType": "table",
+              "encodings": {
+                "columns": [
+                  {
+                    "fieldName": "packet_form_name"
+                  },
+                  {
+                    "fieldName": "specialty"
+                  },
+                  {
+                    "fieldName": "provider_name"
+                  },
+                  {
+                    "fieldName": "location_name"
+                  },
+                  {
+                    "fieldName": "last_update"
+                  },
+                  {
+                    "fieldName": "version"
+                  }
+                ]
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 13,
+            "width": 12,
+            "height": 8
+          }
+        }
+      ],
+      "pageType": "PAGE_TYPE_CANVAS",
+      "layoutVersion": "GRID_V1"
+    },
+    {
+      "name": "7c4f18ce",
+      "displayName": "Global Filters",
+      "pageType": "PAGE_TYPE_GLOBAL_FILTERS",
+      "layoutVersion": "GRID_V1"
+    }
+  ],
+  "uiSettings": {
+    "theme": {
+      "widgetHeaderAlignment": "ALIGNMENT_UNSPECIFIED"
+    },
+    "applyModeEnabled": false
+  }
+}
