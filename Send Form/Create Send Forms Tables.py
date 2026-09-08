@@ -3,6 +3,10 @@
 # [tool.databricks.environment]
 # environment_version = "5"
 # ///
+spark
+
+# COMMAND ----------
+
 # DBTITLE 1,Create patients table
 # MAGIC %sql
 # MAGIC CREATE OR REPLACE TABLE workspace.default.send_forms_patients AS

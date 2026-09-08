@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Databricks Job Trigger</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+</head>
+<body>
+    <div id="root"></div>
+    
+    <!-- Load components in order -->
+    <script type="text/babel" src="{{ url_for('static', filename='js/components/ErrorDisplay.js') }}"></script>
+    <script type="text/babel" src="{{ url_for('static', filename='js/components/JobSelector.js') }}"></script>
+    <script type="text/babel" src="{{ url_for('static', filename='js/components/TriggerButton.js') }}"></script>
+    <script type="text/babel" src="{{ url_for('static', filename='js/components/RunStatus.js') }}"></script>
+    <script type="text/babel" src="{{ url_for('static', filename='js/App.js') }}"></script>
+</body>
+</html>
