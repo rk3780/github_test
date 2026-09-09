@@ -1,0 +1,342 @@
+{
+  "datasets": [
+    {
+      "name": "precision_medicine_orders",
+      "displayName": "Precision Medicine Orders",
+      "config": {
+        "version": "1.1",
+        "source": "workspace.default.precision_medicine_orders",
+        "dimensions": [
+          {
+            "name": "order_type",
+            "expr": "order_type"
+          },
+          {
+            "name": "status",
+            "expr": "status"
+          },
+          {
+            "name": "submitted_completed_date",
+            "expr": "submitted_completed_date"
+          },
+          {
+            "name": "ordered_on_behalf_of",
+            "expr": "ordered_on_behalf_of"
+          },
+          {
+            "name": "order_category",
+            "expr": "CASE \n  WHEN status = 'Submitted' AND order_type = 'Electronic' THEN 'Submitted (Electronic)'\n  WHEN status = 'Completed' AND order_type = 'Manual' THEN 'Completed (Manual)'\n  ELSE 'Other'\nEND\n"
+          }
+        ],
+        "measures": [
+          {
+            "name": "order_count",
+            "expr": "COUNT(*)"
+          },
+          {
+            "name": "placed_orders",
+            "expr": "COUNT_IF(status = 'Placed')"
+          },
+          {
+            "name": "placed_on_behalf_count",
+            "expr": "COUNT_IF(status = 'Placed' AND ordered_on_behalf_of = true)"
+          },
+          {
+            "name": "placed_on_behalf_percentage",
+            "expr": "COUNT_IF(status = 'Placed' AND ordered_on_behalf_of = true) * 100.0 / NULLIF(COUNT_IF(status = 'Placed'), 0)",
+            "displayName": "Ordered On Behalf Of %",
+            "format": {
+              "type": "number",
+              "decimalPlaces": {
+                "type": "exact",
+                "places": 1.0
+              }
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "pages": [
+    {
+      "name": "559b595f",
+      "displayName": "Page 1",
+      "layout": [
+        {
+          "widget": {
+            "name": "counter_submitted_electronic",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "precision_medicine_orders",
+                  "fields": [
+                    {
+                      "name": "measure(order_count)",
+                      "expression": "MEASURE(`order_count`)"
+                    }
+                  ],
+                  "filters": [
+                    {
+                      "expression": "`status` IN ('Submitted')"
+                    },
+                    {
+                      "expression": "`order_type` IN ('Electronic')"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "frame": {
+                "showTitle": true,
+                "title": "Submitted (Electronic)"
+              },
+              "version": 2,
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "measure(order_count)"
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 0,
+            "width": 2,
+            "height": 3
+          }
+        },
+        {
+          "widget": {
+            "name": "counter_completed_manual",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "precision_medicine_orders",
+                  "fields": [
+                    {
+                      "name": "measure(order_count)",
+                      "expression": "MEASURE(`order_count`)"
+                    }
+                  ],
+                  "filters": [
+                    {
+                      "expression": "`status` IN ('Completed')"
+                    },
+                    {
+                      "expression": "`order_type` IN ('Manual')"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "frame": {
+                "showTitle": true,
+                "title": {
+                  "value": "Completed (Manual)",
+                  "fields": []
+                }
+              },
+              "version": 2,
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "measure(order_count)"
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 2,
+            "y": 0,
+            "width": 2,
+            "height": 3
+          }
+        },
+        {
+          "widget": {
+            "name": "counter_placed_on_behalf",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "precision_medicine_orders",
+                  "fields": [
+                    {
+                      "name": "measure(placed_on_behalf_count)",
+                      "expression": "MEASURE(`placed_on_behalf_count`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "frame": {
+                "showTitle": true,
+                "title": "Orders Placed on Behalf"
+              },
+              "version": 2,
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "measure(placed_on_behalf_count)"
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 4,
+            "y": 0,
+            "width": 2,
+            "height": 3
+          }
+        },
+        {
+          "widget": {
+            "name": "counter_placed_on_behalf_percentage",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "precision_medicine_orders",
+                  "fields": [
+                    {
+                      "name": "measure(placed_on_behalf_percentage)",
+                      "expression": "MEASURE(`placed_on_behalf_percentage`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "frame": {
+                "showTitle": true,
+                "title": "% Placed on Behalf"
+              },
+              "version": 2,
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "measure(placed_on_behalf_percentage)"
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 6,
+            "y": 0,
+            "width": 2,
+            "height": 3
+          }
+        },
+        {
+          "widget": {
+            "name": "line_orders_over_time",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "precision_medicine_orders",
+                  "fields": [
+                    {
+                      "name": "order_category",
+                      "expression": "`order_category`"
+                    },
+                    {
+                      "name": "daily(submitted_completed_date)",
+                      "expression": "DATE_TRUNC(\"DAY\", `submitted_completed_date`)"
+                    },
+                    {
+                      "name": "measure(order_count)",
+                      "expression": "MEASURE(`order_count`)"
+                    }
+                  ],
+                  "filters": [
+                    {
+                      "expression": "`order_category` IN ('Submitted (Electronic)', 'Completed (Manual)')"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "frame": {
+                "showTitle": true,
+                "title": {
+                  "value": "Orders Over Time",
+                  "fields": []
+                }
+              },
+              "version": 3,
+              "mark": {
+                "lineShape": "linear"
+              },
+              "widgetType": "line",
+              "encodings": {
+                "x": {
+                  "fieldName": "daily(submitted_completed_date)",
+                  "scale": {
+                    "type": "temporal"
+                  }
+                },
+                "y": {
+                  "fieldName": "measure(order_count)",
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                },
+                "color": {
+                  "fieldName": "order_category",
+                  "scale": {
+                    "type": "categorical"
+                  }
+                },
+                "label": {
+                  "show": false
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 3,
+            "width": 12,
+            "height": 4
+          }
+        }
+      ],
+      "pageType": "PAGE_TYPE_CANVAS",
+      "layoutVersion": "GRID_V1"
+    }
+  ],
+  "uiSettings": {
+    "theme": {
+      "widgetHeaderAlignment": "ALIGNMENT_UNSPECIFIED"
+    },
+    "applyModeEnabled": false
+  }
+}
