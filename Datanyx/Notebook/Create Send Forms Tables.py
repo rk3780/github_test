@@ -3,7 +3,9 @@
 # [tool.databricks.environment]
 # environment_version = "5"
 # ///
-spark
+from pyspark.sql import SparkSession
+
+spark = SparkSession.builder.getOrCreate()
 
 # COMMAND ----------
 

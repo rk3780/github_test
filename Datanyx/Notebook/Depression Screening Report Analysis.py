@@ -4,7 +4,10 @@
 # environment_version = "5"
 # ///
 # DBTITLE 1,Insert all data into table
+from pyspark.sql import SparkSession
 from pyspark.sql.types import StructType, StructField, StringType
+
+spark = SparkSession.builder.getOrCreate()
 
 # Define the schema
 schema = StructType([
