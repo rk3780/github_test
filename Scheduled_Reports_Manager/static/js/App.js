@@ -204,16 +204,22 @@ function App() {
             {/* Tab Navigation */}
             <div className="tabs">
                 <button 
-                    className={`tab ${activeTab === 'practice-scheduled-reports' ? 'active' : ''}`}
-                    onClick={() => setActiveTab('practice-scheduled-reports')}
+                    className={`tab ${activeTab === 'reports' ? 'active' : ''}`}
+                    onClick={() => setActiveTab('reports')}
                 >
-                    Practice Scheduled Reports
+                    Reports
                 </button>
                 <button 
                     className={`tab ${activeTab === 'generated-reports' ? 'active' : ''}`}
                     onClick={() => setActiveTab('generated-reports')}
                 >
                     Generated Reports
+                </button>
+                <button 
+                    className={`tab ${activeTab === 'practice-scheduled-reports' ? 'active' : ''}`}
+                    onClick={() => setActiveTab('practice-scheduled-reports')}
+                >
+                    Practice Scheduled Reports
                 </button>
             </div>
 
@@ -344,6 +350,10 @@ function App() {
                 </div>
             )}
 
+            {activeTab === 'reports' && (
+                <div className="placeholder">Reports tab - Coming soon</div>
+            )}
+
             {activeTab === 'generated-reports' && (
                 <div className="table-container">
                     {/* Controls */}
@@ -455,12 +465,7 @@ function App() {
                         </>
                     )}
                 </div>
-            )}
-
-            {activeTab === 'reports' && (
-                <div className="placeholder">Reports tab - Coming soon</div>
-            )}
-            
+            )}            
         </div>
     );
 }
