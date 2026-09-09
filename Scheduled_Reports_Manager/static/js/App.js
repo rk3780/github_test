@@ -456,6 +456,11 @@ function App() {
                     )}
                 </div>
             )}
+
+            {activeTab === 'reports' && (
+                <div className="placeholder">Reports tab - Coming soon</div>
+            )}
+            
         </div>
     );
 }
