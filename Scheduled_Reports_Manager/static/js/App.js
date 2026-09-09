@@ -6,6 +6,8 @@ function App() {
     const [reports, setReports] = useState([]);
     const [generatedReports, setGeneratedReports] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [isRefreshing, setIsRefreshing] = useState(false);
+    const [updatingReportId, setUpdatingReportId] = useState(null);
     const [error, setError] = useState(null);
     const [searchTerm, setSearchTerm] = useState('');
     const [entriesPerPage, setEntriesPerPage] = useState(15);
@@ -23,9 +25,13 @@ function App() {
         return () => clearTimeout(timer);
     }, [searchTerm, entriesPerPage, currentPage, activeTab]);
 
-    const fetchReports = async () => {
+    const fetchReports = async (showRefreshIndicator = false) => {
         try {
-            setLoading(true);
+            if (reports.length === 0) {
+                setLoading(true);
+            } else if (showRefreshIndicator) {
+                setIsRefreshing(true);
+            }
             const offset = currentPage * entriesPerPage;
             const response = await fetch(
                 `/api/scheduled-reports?search=${searchTerm}&limit=${entriesPerPage}&offset=${offset}`
@@ -43,12 +49,17 @@ function App() {
             setError(err.message);
         } finally {
             setLoading(false);
+            setIsRefreshing(false);
         }
     };
 
-    const fetchGeneratedReports = async () => {
+    const fetchGeneratedReports = async (showRefreshIndicator = false) => {
         try {
-            setLoading(true);
+            if (generatedReports.length === 0) {
+                setLoading(true);
+            } else if (showRefreshIndicator) {
+                setIsRefreshing(true);
+            }
             const offset = currentPage * entriesPerPage;
             const response = await fetch(
                 `/api/generated-reports?search=${searchTerm}&limit=${entriesPerPage}&offset=${offset}`
@@ -66,28 +77,59 @@ function App() {
             setError(err.message);
         } finally {
             setLoading(false);
+            setIsRefreshing(false);
         }
     };
 
     const handlePauseToggle = async (reportId, currentStatus) => {
         try {
+            setUpdatingReportId(reportId);
             const newStatus = currentStatus === 'Pause' ? 'Paused' : 'Pause';
+            
+            // Optimistically update the UI
+            setReports(prevReports => 
+                prevReports.map(r => 
+                    r.report_id === reportId 
+                        ? { ...r, pause_schedule: newStatus } 
+                        : r
+                )
+            );
+            
             const response = await fetch(`/api/scheduled-reports/${reportId}/pause`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ pause_schedule: newStatus })
             });
             
-            if (response.ok) {
-                fetchReports();
+            if (!response.ok) {
+                // Revert on error
+                setReports(prevReports => 
+                    prevReports.map(r => 
+                        r.report_id === reportId 
+                            ? { ...r, pause_schedule: currentStatus } 
+                            : r
+                    )
+                );
+                alert('Failed to update pause status');
             }
         } catch (err) {
             console.error('Error toggling pause:', err);
+            // Revert on error
+            setReports(prevReports => 
+                prevReports.map(r => 
+                    r.report_id === reportId 
+                        ? { ...r, pause_schedule: currentStatus } 
+                        : r
+                )
+            );
+        } finally {
+            setUpdatingReportId(null);
         }
     };
 
     const handleGenerate = async (reportId) => {
         try {
+            setUpdatingReportId(reportId);
             const response = await fetch(`/api/scheduled-reports/${reportId}/generate`, {
                 method: 'POST'
             });
@@ -95,15 +137,17 @@ function App() {
             
             if (data.success) {
                 alert('Report generated successfully! Check the Generated Reports tab.');
-                // Refresh generated reports if on that tab
+                // Silently refresh generated reports in background if on that tab
                 if (activeTab === 'generated-reports') {
-                    fetchGeneratedReports();
+                    fetchGeneratedReports(false);
                 }
             } else {
                 alert('Error: ' + data.error);
             }
         } catch (err) {
             alert('Error generating report: ' + err.message);
+        } finally {
+            setUpdatingReportId(null);
         }
     };
 
@@ -111,6 +155,13 @@ function App() {
         if (!confirm('Are you sure you want to delete this scheduled report?')) return;
         
         try {
+            setUpdatingReportId(reportId);
+            
+            // Optimistically remove from UI
+            const deletedReport = reports.find(r => r.report_id === reportId);
+            setReports(prevReports => prevReports.filter(r => r.report_id !== reportId));
+            setTotalReports(prev => prev - 1);
+            
             const response = await fetch(`/api/scheduled-reports/${reportId}`, {
                 method: 'DELETE'
             });
@@ -118,12 +169,18 @@ function App() {
             
             if (data.success) {
                 alert('Report deleted successfully!');
-                fetchReports();
             } else {
+                // Revert on error
+                setReports(prevReports => [...prevReports, deletedReport].sort((a, b) => a.report_id - b.report_id));
+                setTotalReports(prev => prev + 1);
                 alert('Error: ' + data.error);
             }
         } catch (err) {
             alert('Error deleting report: ' + err.message);
+            // Fetch fresh data on error
+            fetchReports(false);
+        } finally {
+            setUpdatingReportId(null);
         }
     };
 
@@ -131,6 +188,13 @@ function App() {
         if (!confirm('Are you sure you want to delete this generated report?')) return;
         
         try {
+            setUpdatingReportId(reportId);
+            
+            // Optimistically remove from UI
+            const deletedReport = generatedReports.find(r => r.report_id === reportId);
+            setGeneratedReports(prevReports => prevReports.filter(r => r.report_id !== reportId));
+            setTotalReports(prev => prev - 1);
+            
             const response = await fetch(`/api/generated-reports/${reportId}`, {
                 method: 'DELETE'
             });
@@ -138,12 +202,18 @@ function App() {
             
             if (data.success) {
                 alert('Generated report deleted successfully!');
-                fetchGeneratedReports();
             } else {
+                // Revert on error
+                setGeneratedReports(prevReports => [...prevReports, deletedReport].sort((a, b) => b.generated_on - a.generated_on));
+                setTotalReports(prev => prev + 1);
                 alert('Error: ' + data.error);
             }
         } catch (err) {
             alert('Error deleting generated report: ' + err.message);
+            // Fetch fresh data on error
+            fetchGeneratedReports(false);
+        } finally {
+            setUpdatingReportId(null);
         }
     };
 
@@ -240,7 +310,13 @@ function App() {
                                 className="search-input"
                             />
                             <button className="search-btn">🔍</button>
-                            <button className="refresh-btn" onClick={fetchReports}>↻</button>
+                            <button 
+                                className="refresh-btn" 
+                                onClick={() => fetchReports(true)}
+                                disabled={isRefreshing}
+                            >
+                                {isRefreshing ? '⟳' : '↻'}
+                            </button>
                         </div>
                         <div className="right-controls">
                             <label>Show</label>
@@ -267,6 +343,11 @@ function App() {
                         <div className="error">Error: {error}</div>
                     ) : (
                         <>
+                            {isRefreshing && (
+                                <div style={{ textAlign: 'center', padding: '8px', background: '#f0f0f0', fontSize: '14px' }}>
+                                    ⟳ Refreshing...
+                                </div>
+                            )}
                             <table className="reports-table">
                                 <thead>
                                     <tr>
@@ -299,16 +380,20 @@ function App() {
                                                 <button 
                                                     className={`pause-btn ${report.pause_schedule === 'Paused' ? 'paused' : ''}`}
                                                     onClick={() => handlePauseToggle(report.report_id, report.pause_schedule)}
+                                                    disabled={updatingReportId === report.report_id}
+                                                    style={{ opacity: updatingReportId === report.report_id ? 0.6 : 1 }}
                                                 >
-                                                    {report.pause_schedule === 'Paused' ? '⏸ Paused' : '⏸ Pause'}
+                                                    {updatingReportId === report.report_id ? '⟳' : (report.pause_schedule === 'Paused' ? '⏸ Paused' : '⏸ Pause')}
                                                 </button>
                                             </td>
                                             <td>
                                                 <button 
                                                     className="generate-btn"
                                                     onClick={() => handleGenerate(report.report_id)}
+                                                    disabled={updatingReportId === report.report_id}
+                                                    style={{ opacity: updatingReportId === report.report_id ? 0.6 : 1 }}
                                                 >
-                                                    GENERATE
+                                                    {updatingReportId === report.report_id ? '⟳' : 'GENERATE'}
                                                 </button>
                                             </td>
                                             <td>
@@ -318,8 +403,10 @@ function App() {
                                                 <button 
                                                     className="icon-btn delete-btn"
                                                     onClick={() => handleDelete(report.report_id)}
+                                                    disabled={updatingReportId === report.report_id}
+                                                    style={{ opacity: updatingReportId === report.report_id ? 0.6 : 1 }}
                                                 >
-                                                    🗑️
+                                                    {updatingReportId === report.report_id ? '⟳' : '🗑️'}
                                                 </button>
                                             </td>
                                         </tr>
@@ -370,7 +457,13 @@ function App() {
                                 className="search-input"
                             />
                             <button className="search-btn">🔍</button>
-                            <button className="refresh-btn" onClick={fetchGeneratedReports}>↻</button>
+                            <button 
+                                className="refresh-btn" 
+                                onClick={() => fetchGeneratedReports(true)}
+                                disabled={isRefreshing}
+                            >
+                                {isRefreshing ? '⟳' : '↻'}
+                            </button>
                         </div>
                         <div className="right-controls">
                             <label>Show</label>
@@ -397,6 +490,11 @@ function App() {
                         <div className="error">Error: {error}</div>
                     ) : (
                         <>
+                            {isRefreshing && (
+                                <div style={{ textAlign: 'center', padding: '8px', background: '#f0f0f0', fontSize: '14px' }}>
+                                    ⟳ Refreshing...
+                                </div>
+                            )}
                             <table className="reports-table">
                                 <thead>
                                     <tr>
@@ -426,8 +524,10 @@ function App() {
                                                     className="icon-btn download-btn"
                                                     onClick={() => handleDownload(report.report_id)}
                                                     title="Download Report"
+                                                    disabled={updatingReportId === report.report_id}
+                                                    style={{ opacity: updatingReportId === report.report_id ? 0.6 : 1 }}
                                                 >
-                                                    📥
+                                                    {updatingReportId === report.report_id ? '⟳' : '📥'}
                                                 </button>
                                             </td>
                                             <td>
@@ -435,8 +535,10 @@ function App() {
                                                     className="icon-btn delete-btn"
                                                     onClick={() => handleGeneratedReportDelete(report.report_id)}
                                                     title="Delete Report"
+                                                    disabled={updatingReportId === report.report_id}
+                                                    style={{ opacity: updatingReportId === report.report_id ? 0.6 : 1 }}
                                                 >
-                                                    🗑️
+                                                    {updatingReportId === report.report_id ? '⟳' : '🗑️'}
                                                 </button>
                                             </td>
                                         </tr>
