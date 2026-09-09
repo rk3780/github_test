@@ -2,7 +2,7 @@
   "datasets": [
     {
       "name": "precision_medicine_orders",
-      "displayName": "Precision Medicine Orders",
+      "displayName": "Orders Volume",
       "config": {
         "version": "1.1",
         "source": "workspace.default.precision_medicine_orders",
@@ -52,6 +52,14 @@
                 "places": 1.0
               }
             }
+          },
+          {
+            "name": "requisition_count",
+            "expr": "COUNT_IF(status = 'Requisition')"
+          },
+          {
+            "name": "submitted_completed_count",
+            "expr": "COUNT_IF(status IN ('Submitted', 'Completed'))"
           }
         ]
       }
@@ -60,7 +68,7 @@
   "pages": [
     {
       "name": "559b595f",
-      "displayName": "Page 1",
+      "displayName": "Orders Volume",
       "layout": [
         {
           "widget": {
@@ -107,9 +115,9 @@
           },
           "position": {
             "x": 0,
-            "y": 0,
+            "y": 2,
             "width": 2,
-            "height": 3
+            "height": 2
           }
         },
         {
@@ -159,94 +167,10 @@
             }
           },
           "position": {
-            "x": 2,
-            "y": 0,
+            "x": 0,
+            "y": 4,
             "width": 2,
-            "height": 3
-          }
-        },
-        {
-          "widget": {
-            "name": "counter_placed_on_behalf",
-            "queries": [
-              {
-                "name": "main_query",
-                "query": {
-                  "datasetName": "precision_medicine_orders",
-                  "fields": [
-                    {
-                      "name": "measure(placed_on_behalf_count)",
-                      "expression": "MEASURE(`placed_on_behalf_count`)"
-                    }
-                  ],
-                  "disaggregated": false
-                }
-              }
-            ],
-            "spec": {
-              "frame": {
-                "showTitle": true,
-                "title": "Orders Placed on Behalf"
-              },
-              "version": 2,
-              "widgetType": "counter",
-              "encodings": {
-                "value": {
-                  "fieldName": "measure(placed_on_behalf_count)"
-                }
-              },
-              "data": {
-                "queryName": "main_query"
-              }
-            }
-          },
-          "position": {
-            "x": 4,
-            "y": 0,
-            "width": 2,
-            "height": 3
-          }
-        },
-        {
-          "widget": {
-            "name": "counter_placed_on_behalf_percentage",
-            "queries": [
-              {
-                "name": "main_query",
-                "query": {
-                  "datasetName": "precision_medicine_orders",
-                  "fields": [
-                    {
-                      "name": "measure(placed_on_behalf_percentage)",
-                      "expression": "MEASURE(`placed_on_behalf_percentage`)"
-                    }
-                  ],
-                  "disaggregated": false
-                }
-              }
-            ],
-            "spec": {
-              "frame": {
-                "showTitle": true,
-                "title": "% Placed on Behalf"
-              },
-              "version": 2,
-              "widgetType": "counter",
-              "encodings": {
-                "value": {
-                  "fieldName": "measure(placed_on_behalf_percentage)"
-                }
-              },
-              "data": {
-                "queryName": "main_query"
-              }
-            }
-          },
-          "position": {
-            "x": 6,
-            "y": 0,
-            "width": 2,
-            "height": 3
+            "height": 2
           }
         },
         {
@@ -322,14 +246,238 @@
             }
           },
           "position": {
-            "x": 0,
-            "y": 3,
-            "width": 12,
+            "x": 2,
+            "y": 2,
+            "width": 10,
             "height": 4
+          }
+        },
+        {
+          "widget": {
+            "name": "header_orders",
+            "multilineTextboxSpec": {
+              "lines": [
+                "## Orders"
+              ]
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 1,
+            "width": 12,
+            "height": 1
+          }
+        },
+        {
+          "widget": {
+            "name": "data_last_extracted",
+            "multilineTextboxSpec": {
+              "lines": [
+                "**Data Last Extracted:** 08/17/2026 at 12:00am PST"
+              ]
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 0,
+            "width": 12,
+            "height": 1
           }
         }
       ],
       "pageType": "PAGE_TYPE_CANVAS",
+      "layoutVersion": "GRID_V1"
+    },
+    {
+      "name": "global_filters",
+      "displayName": "Global Filters",
+      "layout": [
+        {
+          "widget": {
+            "name": "filter_date",
+            "queries": [
+              {
+                "name": "dashboards/01f1ab77f6181dffbc49eb682d78ff21/datasets/01f1ab7823be1a49990ccea3b3736097_submitted_completed_date",
+                "query": {
+                  "datasetName": "precision_medicine_orders",
+                  "fields": [
+                    {
+                      "name": "submitted_completed_date",
+                      "expression": "`submitted_completed_date`"
+                    },
+                    {
+                      "name": "submitted_completed_date_associativity",
+                      "expression": "COUNT_IF(`associative_filter_predicate_group`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "frame": {
+                "showTitle": true,
+                "title": "Date"
+              },
+              "widgetType": "filter-date-range-picker",
+              "encodings": {
+                "fields": [
+                  {
+                    "fieldName": "submitted_completed_date",
+                    "queryName": "dashboards/01f1ab77f6181dffbc49eb682d78ff21/datasets/01f1ab7823be1a49990ccea3b3736097_submitted_completed_date"
+                  }
+                ]
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 0,
+            "width": 3,
+            "height": 4
+          }
+        },
+        {
+          "widget": {
+            "name": "filter_order_status",
+            "queries": [
+              {
+                "name": "dashboards/01f1ab77f6181dffbc49eb682d78ff21/datasets/01f1ab7823be1a49990ccea3b3736097_status",
+                "query": {
+                  "datasetName": "precision_medicine_orders",
+                  "fields": [
+                    {
+                      "name": "status",
+                      "expression": "`status`"
+                    },
+                    {
+                      "name": "status_associativity",
+                      "expression": "COUNT_IF(`associative_filter_predicate_group`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "frame": {
+                "showTitle": true,
+                "title": "Order Status"
+              },
+              "widgetType": "filter-multi-select",
+              "encodings": {
+                "fields": [
+                  {
+                    "fieldName": "status",
+                    "queryName": "dashboards/01f1ab77f6181dffbc49eb682d78ff21/datasets/01f1ab7823be1a49990ccea3b3736097_status"
+                  }
+                ]
+              }
+            }
+          },
+          "position": {
+            "x": 3,
+            "y": 0,
+            "width": 3,
+            "height": 3
+          }
+        },
+        {
+          "widget": {
+            "name": "filter_order_type",
+            "queries": [
+              {
+                "name": "dashboards/01f1ab77f6181dffbc49eb682d78ff21/datasets/01f1ab7823be1a49990ccea3b3736097_order_type",
+                "query": {
+                  "datasetName": "precision_medicine_orders",
+                  "fields": [
+                    {
+                      "name": "order_type",
+                      "expression": "`order_type`"
+                    },
+                    {
+                      "name": "order_type_associativity",
+                      "expression": "COUNT_IF(`associative_filter_predicate_group`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "frame": {
+                "showTitle": true,
+                "title": "Order Type"
+              },
+              "widgetType": "filter-multi-select",
+              "encodings": {
+                "fields": [
+                  {
+                    "fieldName": "order_type",
+                    "queryName": "dashboards/01f1ab77f6181dffbc49eb682d78ff21/datasets/01f1ab7823be1a49990ccea3b3736097_order_type"
+                  }
+                ]
+              }
+            }
+          },
+          "position": {
+            "x": 6,
+            "y": 0,
+            "width": 3,
+            "height": 3
+          }
+        },
+        {
+          "widget": {
+            "name": "filter_ordered_on_behalf",
+            "queries": [
+              {
+                "name": "dashboards/01f1ab77f6181dffbc49eb682d78ff21/datasets/01f1ab7823be1a49990ccea3b3736097_ordered_on_behalf_of",
+                "query": {
+                  "datasetName": "precision_medicine_orders",
+                  "fields": [
+                    {
+                      "name": "ordered_on_behalf_of",
+                      "expression": "`ordered_on_behalf_of`"
+                    },
+                    {
+                      "name": "ordered_on_behalf_of_associativity",
+                      "expression": "COUNT_IF(`associative_filter_predicate_group`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "frame": {
+                "showTitle": true,
+                "title": "Ordered On Behalf Of"
+              },
+              "widgetType": "filter-multi-select",
+              "encodings": {
+                "fields": [
+                  {
+                    "fieldName": "ordered_on_behalf_of",
+                    "queryName": "dashboards/01f1ab77f6181dffbc49eb682d78ff21/datasets/01f1ab7823be1a49990ccea3b3736097_ordered_on_behalf_of"
+                  }
+                ]
+              }
+            }
+          },
+          "position": {
+            "x": 9,
+            "y": 0,
+            "width": 3,
+            "height": 3
+          }
+        }
+      ],
+      "pageType": "PAGE_TYPE_GLOBAL_FILTERS",
       "layoutVersion": "GRID_V1"
     }
   ],
