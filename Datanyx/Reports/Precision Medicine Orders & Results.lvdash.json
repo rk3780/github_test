@@ -486,5 +486,33 @@
       "widgetHeaderAlignment": "ALIGNMENT_UNSPECIFIED"
     },
     "applyModeEnabled": false
-  }
+  },
+  "bookmarks": [
+    {
+      "name": "6d283efa",
+      "displayName": "Monthly filter settings",
+      "widgetSelections": [
+        {
+          "pageName": "global_filters",
+          "widgetName": "filter_date",
+          "selectionJson": "{\"kind\":\"range\",\"dataType\":\"date\",\"min\":{\"value\":\"2026-09-01T00:00:00.000\"},\"max\":{\"value\":\"2026-09-09T23:59:59.999\"}}"
+        },
+        {
+          "pageName": "global_filters",
+          "widgetName": "filter_order_status",
+          "selectionJson": "{\"kind\":\"values\",\"dataType\":\"string\",\"values\":[\"Completed\"]}"
+        },
+        {
+          "pageName": "global_filters",
+          "widgetName": "filter_order_type",
+          "selectionJson": "{\"kind\":\"values\",\"dataType\":\"string\",\"values\":[\"Manual\"]}"
+        },
+        {
+          "pageName": "global_filters",
+          "widgetName": "filter_ordered_on_behalf",
+          "selectionJson": "{\"kind\":\"operator\",\"operator\":\"and\",\"args\":[]}"
+        }
+      ]
+    }
+  ]
 }

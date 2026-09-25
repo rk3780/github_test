@@ -1,0 +1,2 @@
+dash>=2.14.0
+databricks-sdk>=0.20.0

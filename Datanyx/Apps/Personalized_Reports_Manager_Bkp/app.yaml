@@ -1,0 +1,13 @@
+command:
+  - python
+  - app.py
+
+resources:
+  - name: jobs
+    description: Trigger and monitor Databricks jobs
+    permissions:
+      - permission: CAN_MANAGE_RUN
+  - name: sql-warehouses
+    description: Execute SQL queries to fetch and update scheduled reports
+    permissions:
+      - permission: CAN_USE
