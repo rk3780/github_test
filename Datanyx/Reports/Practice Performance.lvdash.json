@@ -1,0 +1,646 @@
+{
+  "datasets": [
+    {
+      "name": "kpi_metrics",
+      "displayName": "KPI Metrics",
+      "queryLines": [
+        "SELECT\n",
+        "  *\n",
+        "FROM\n",
+        "  kpi_metrics"
+      ],
+      "catalog": "workspace",
+      "schema": "default"
+    },
+    {
+      "name": "regimen_margins",
+      "displayName": "Regimen Margins",
+      "queryLines": [
+        "SELECT\n",
+        "  *\n",
+        "FROM\n",
+        "  regimen_margins"
+      ],
+      "catalog": "workspace",
+      "schema": "default"
+    },
+    {
+      "name": "payer_mix",
+      "displayName": "Payer Mix",
+      "queryLines": [
+        "SELECT\n",
+        "  *\n",
+        "FROM\n",
+        "  payer_mix"
+      ],
+      "catalog": "workspace",
+      "schema": "default"
+    },
+    {
+      "name": "site_list",
+      "displayName": "Site List",
+      "queryLines": [
+        "SELECT\n",
+        "  *\n",
+        "FROM\n",
+        "  site_list"
+      ],
+      "catalog": "workspace",
+      "schema": "default"
+    },
+    {
+      "name": "payer_list",
+      "displayName": "Payer List",
+      "queryLines": [
+        "SELECT\n",
+        "  *\n",
+        "FROM\n",
+        "  payer_list"
+      ],
+      "catalog": "workspace",
+      "schema": "default"
+    }
+  ],
+  "pages": [
+    {
+      "name": "54dc1fad",
+      "displayName": "Page 1",
+      "layout": [
+        {
+          "widget": {
+            "name": "active_patients",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "kpi_metrics",
+                  "fields": [
+                    {
+                      "name": "sum(prior_value)",
+                      "expression": "SUM(`prior_value`)"
+                    },
+                    {
+                      "name": "sum(current_value)",
+                      "expression": "SUM(`current_value`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "frame": {},
+              "version": 2,
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "sum(current_value)"
+                },
+                "target": {
+                  "fieldName": "sum(prior_value)",
+                  "change": {
+                    "type": "percent",
+                    "style": {
+                      "rules": [
+                        {
+                          "condition": {
+                            "operator": ">",
+                            "operand": {
+                              "type": "data-value",
+                              "value": "0"
+                            }
+                          },
+                          "foregroundColor": "#52A870"
+                        },
+                        {
+                          "condition": {
+                            "operator": "<",
+                            "operand": {
+                              "type": "data-value",
+                              "value": "0"
+                            }
+                          },
+                          "foregroundColor": "#C85070"
+                        }
+                      ]
+                    }
+                  }
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 2,
+            "width": 3,
+            "height": 4
+          }
+        },
+        {
+          "widget": {
+            "name": "avg_revenue",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "kpi_metrics",
+                  "fields": [
+                    {
+                      "name": "sum(prior_value)",
+                      "expression": "SUM(`prior_value`)"
+                    },
+                    {
+                      "name": "sum(current_value)",
+                      "expression": "SUM(`current_value`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "frame": {},
+              "version": 2,
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "sum(current_value)",
+                  "format": {
+                    "type": "number-currency",
+                    "currencyCode": "USD",
+                    "abbreviation": "none",
+                    "decimalPlaces": {
+                      "type": "exact",
+                      "places": 0
+                    }
+                  }
+                },
+                "target": {
+                  "fieldName": "sum(prior_value)",
+                  "change": {
+                    "type": "percent",
+                    "style": {
+                      "rules": [
+                        {
+                          "condition": {
+                            "operator": ">",
+                            "operand": {
+                              "type": "data-value",
+                              "value": "0"
+                            }
+                          },
+                          "foregroundColor": "#52A870"
+                        },
+                        {
+                          "condition": {
+                            "operator": "<",
+                            "operand": {
+                              "type": "data-value",
+                              "value": "0"
+                            }
+                          },
+                          "foregroundColor": "#C85070"
+                        }
+                      ]
+                    }
+                  }
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 3,
+            "y": 2,
+            "width": 3,
+            "height": 4
+          }
+        },
+        {
+          "widget": {
+            "name": "report_run_time",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "kpi_metrics",
+                  "fields": [
+                    {
+                      "name": "avg(prior_value)",
+                      "expression": "AVG(`prior_value`)"
+                    },
+                    {
+                      "name": "avg(current_value)",
+                      "expression": "AVG(`current_value`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "frame": {},
+              "version": 2,
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "avg(current_value)",
+                  "formatTemplate": "{{ @formatted }}s"
+                },
+                "target": {
+                  "fieldName": "avg(prior_value)",
+                  "change": {
+                    "type": "percent",
+                    "style": {
+                      "rules": [
+                        {
+                          "condition": {
+                            "operator": "<"
+                          },
+                          "foregroundColor": {
+                            "themeColorType": "visualizationColors",
+                            "position": 4
+                          }
+                        },
+                        {
+                          "condition": {
+                            "operator": ">"
+                          },
+                          "foregroundColor": "#00A972"
+                        }
+                      ]
+                    }
+                  }
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 6,
+            "y": 2,
+            "width": 3,
+            "height": 4
+          }
+        },
+        {
+          "widget": {
+            "name": "denial_rate",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "kpi_metrics",
+                  "fields": [
+                    {
+                      "name": "avg(prior_value)",
+                      "expression": "AVG(`prior_value`)"
+                    },
+                    {
+                      "name": "avg(current_value)",
+                      "expression": "AVG(`current_value`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "frame": {},
+              "version": 2,
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "avg(current_value)",
+                  "formatTemplate": "{{ @formatted }}%"
+                },
+                "target": {
+                  "fieldName": "avg(prior_value)",
+                  "change": {
+                    "type": "percent",
+                    "style": {
+                      "rules": [
+                        {
+                          "condition": {
+                            "operator": "<"
+                          },
+                          "foregroundColor": {
+                            "themeColorType": "visualizationColors",
+                            "position": 4
+                          }
+                        },
+                        {
+                          "condition": {
+                            "operator": ">"
+                          },
+                          "foregroundColor": "#00A972"
+                        }
+                      ]
+                    }
+                  }
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 9,
+            "y": 2,
+            "width": 3,
+            "height": 4
+          }
+        },
+        {
+          "widget": {
+            "name": "payer_mix",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "payer_mix",
+                  "fields": [
+                    {
+                      "name": "sum(percentage)",
+                      "expression": "SUM(`percentage`)"
+                    },
+                    {
+                      "name": "payer_type",
+                      "expression": "`payer_type`"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "frame": {},
+              "version": 3,
+              "widgetType": "pie",
+              "encodings": {
+                "angle": {
+                  "fieldName": "sum(percentage)",
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                },
+                "color": {
+                  "fieldName": "payer_type",
+                  "scale": {
+                    "type": "categorical"
+                  }
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 7,
+            "y": 6,
+            "width": 5,
+            "height": 6
+          }
+        },
+        {
+          "widget": {
+            "name": "margin_by_regimen",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "regimen_margins",
+                  "fields": [
+                    {
+                      "name": "regimen",
+                      "expression": "`regimen`"
+                    },
+                    {
+                      "name": "sum(margin)",
+                      "expression": "SUM(`margin`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "frame": {
+                "showTitle": true,
+                "title": {
+                  "value": "Margin by Regimen — auto-generated answer",
+                  "fields": []
+                }
+              },
+              "version": 3,
+              "widgetType": "bar",
+              "encodings": {
+                "x": {
+                  "fieldName": "regimen",
+                  "displayName": "regimen",
+                  "scale": {
+                    "type": "categorical"
+                  }
+                },
+                "y": {
+                  "fieldName": "sum(margin)",
+                  "displayName": "margin",
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                },
+                "color": {
+                  "fieldName": "regimen",
+                  "displayName": "regimen",
+                  "scale": {
+                    "type": "categorical"
+                  }
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 6,
+            "width": 7,
+            "height": 6
+          }
+        },
+        {
+          "widget": {
+            "name": "conversational_prompt",
+            "multilineTextboxSpec": {
+              "lines": [
+                "💬  Ask: *\"Which regimens drove the largest margin change last quarter?\"* "
+              ]
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 0,
+            "width": 6,
+            "height": 2
+          }
+        },
+        {
+          "widget": {
+            "name": "date_filter",
+            "queries": [
+              {
+                "name": "dashboards/01f1bb2ba44914bfbfb8959efbe0f88b/datasets/01f1bb2d002f1186aed006c3b8b47aae_metric_date",
+                "query": {
+                  "datasetName": "kpi_metrics",
+                  "fields": [
+                    {
+                      "name": "metric_date",
+                      "expression": "`metric_date`"
+                    },
+                    {
+                      "name": "metric_date_associativity",
+                      "expression": "COUNT_IF(`associative_filter_predicate_group`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "frame": {
+                "showTitle": true,
+                "title": "Last 90d"
+              },
+              "widgetType": "filter-date-range-picker",
+              "encodings": {
+                "fields": [
+                  {
+                    "fieldName": "metric_date",
+                    "queryName": "dashboards/01f1bb2ba44914bfbfb8959efbe0f88b/datasets/01f1bb2d002f1186aed006c3b8b47aae_metric_date"
+                  }
+                ]
+              }
+            }
+          },
+          "position": {
+            "x": 6,
+            "y": 0,
+            "width": 2,
+            "height": 2
+          }
+        },
+        {
+          "widget": {
+            "name": "site_filter",
+            "queries": [
+              {
+                "name": "dashboards/01f1bb2ba44914bfbfb8959efbe0f88b/datasets/01f1bb2d002f1186aed006c3b8b47aae_site",
+                "query": {
+                  "datasetName": "kpi_metrics",
+                  "fields": [
+                    {
+                      "name": "site",
+                      "expression": "`site`"
+                    },
+                    {
+                      "name": "site_associativity",
+                      "expression": "COUNT_IF(`associative_filter_predicate_group`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "frame": {
+                "showTitle": true,
+                "title": "All Sites"
+              },
+              "widgetType": "filter-multi-select",
+              "encodings": {
+                "fields": [
+                  {
+                    "fieldName": "site",
+                    "queryName": "dashboards/01f1bb2ba44914bfbfb8959efbe0f88b/datasets/01f1bb2d002f1186aed006c3b8b47aae_site"
+                  }
+                ]
+              }
+            }
+          },
+          "position": {
+            "x": 8,
+            "y": 0,
+            "width": 2,
+            "height": 2
+          }
+        },
+        {
+          "widget": {
+            "name": "payer_filter",
+            "queries": [
+              {
+                "name": "dashboards/01f1bb2ba44914bfbfb8959efbe0f88b/datasets/01f1bb2d002f1186aed006c3b8b47aae_payer",
+                "query": {
+                  "datasetName": "kpi_metrics",
+                  "fields": [
+                    {
+                      "name": "payer",
+                      "expression": "`payer`"
+                    },
+                    {
+                      "name": "payer_associativity",
+                      "expression": "COUNT_IF(`associative_filter_predicate_group`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "frame": {
+                "showTitle": true,
+                "title": "All Payers"
+              },
+              "widgetType": "filter-multi-select",
+              "encodings": {
+                "fields": [
+                  {
+                    "fieldName": "payer",
+                    "queryName": "dashboards/01f1bb2ba44914bfbfb8959efbe0f88b/datasets/01f1bb2d002f1186aed006c3b8b47aae_payer"
+                  }
+                ]
+              }
+            }
+          },
+          "position": {
+            "x": 10,
+            "y": 0,
+            "width": 2,
+            "height": 2
+          }
+        }
+      ],
+      "pageType": "PAGE_TYPE_CANVAS",
+      "layoutVersion": "GRID_V1"
+    }
+  ],
+  "uiSettings": {
+    "theme": {
+      "widgetHeaderAlignment": "ALIGNMENT_UNSPECIFIED"
+    },
+    "applyModeEnabled": false
+  }
+}

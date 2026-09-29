@@ -3,7 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Scheduled Reports Manager</title>
+    <title>Personalized Reports Manager</title>
+    <script>
+      (function() {
+        var theme = localStorage.getItem('prn_darkMode');
+        if (theme === 'true') document.documentElement.setAttribute('data-theme', 'dark');
+      })();
+    </script>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
     <link rel="preconnect" href="https://unpkg.com">
     <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
@@ -12,9 +18,43 @@
     <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
 </head>
 <body>
-    <div id="root"></div>
-    
-    <!-- Load main application -->
-    <script type="text/babel" src="{{ url_for('static', filename='js/App.js') }}"></script>
+    <div id="root"><div style="position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);color:#666;font-size:16px">Loading application...</div></div>
+
+    <!-- Load all JS files as one concatenated Babel unit (shared scope) -->
+    <script>
+    (function() {
+        var files = [
+            '{{ url_for("static", filename="js/components/ErrorBoundary.js") }}',
+            '{{ url_for("static", filename="js/components/PlotlyChart.js") }}',
+            '{{ url_for("static", filename="js/components/Skeleton.js") }}',
+            '{{ url_for("static", filename="js/components/ToastContainer.js") }}',
+            '{{ url_for("static", filename="js/components/Modals.js") }}',
+            '{{ url_for("static", filename="js/components/IkmFilterSidebar.js") }}',
+            '{{ url_for("static", filename="js/components/IkmReportDetail.js") }}',
+            '{{ url_for("static", filename="js/components/DepressionScreeningDetail.js") }}',
+            '{{ url_for("static", filename="js/components/GenericReportDetail.js") }}',
+            '{{ url_for("static", filename="js/App.js") }}'
+        ];
+        Promise.all(files.map(function(f) {
+            return fetch(f).then(function(r) { return r.text(); });
+        })).then(function(contents) {
+            var transpiled = contents.map(function(code, i) {
+                try {
+                    return Babel.transform(code, { presets: ['react', 'env'] }).code;
+                } catch(e) {
+                    console.error('Error transpiling ' + files[i] + ':', e);
+                    throw e;
+                }
+            });
+            var allCode = transpiled.join('\n');
+            var script = document.createElement('script');
+            script.text = allCode;
+            document.body.appendChild(script);
+        }).catch(function(err) {
+            console.error('Failed to load app scripts:', err);
+            document.getElementById('root').innerHTML = '<div style="padding:40px;text-align:center"><h3 style="color:#e74c3c">Failed to load application scripts.</h3><p style="color:#666;font-size:14px">' + String(err) + '</p></div>';
+        });
+    })();
+    </script>
 </body>
 </html>

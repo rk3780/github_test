@@ -43,55 +43,6 @@ job-trigger-app/
 
 ## Features
 
-* **Dashboard Tab** (NEW):
-  - KPI cards: Reports Available, Generated, Scheduled, Categories
-  - Recent generated reports activity feed
-  - Quick action buttons for navigation
-  - Auto-refresh on tab open
-
-* **All 25 Reports Functional** (NEW):
-  - Generic report engine with 3 archetypes: dashboard, table_list, summary
-  - Each report shows KPI cards, interactive charts (line/bar/pie), and data tables
-  - CSV export for every report
-  - Filter sidebar now functional (date range, status, location, diagnosis)
-  - Report 7 (iKnowMed G1) and Report 4 (Depression Screening) retain custom implementations
-
-* **Toast Notifications** (NEW):
-  - Replaced all `alert()` calls with elegant slide-in toast notifications
-  - Success, error, warning, and info variants
-  - Auto-dismiss after 4 seconds
-
-* **Confirmation Modals** (NEW):
-  - Replaced all `confirm()` dialogs with styled modal
-  - Consistent UI for delete confirmations
-
-* **Edit Schedule Modal** (NEW):
-  - Edit button now functional - opens modal to edit schedule name, frequency, and time
-  - PUT `/api/scheduled-reports/<id>/edit` endpoint
-
-* **Dark Mode** (NEW):
-  - Toggle button in header (\u2600/\u263e)
-  - Persists preference in localStorage
-  - Pre-load script prevents flash on page load
-  - Full dark theme for all components
-
-* **Loading Skeletons** (NEW):
-  - Animated shimmer placeholders instead of "Loading..." text
-  - Card and table skeleton variants
-
-* **Report Catalog Improvements** (NEW):
-  - Report number badges on each item
-  - Category count badges in headers
-
-* **Responsive Design** (NEW):
-  - Breakpoints at 1024px, 768px, and 480px
-  - Filter sidebar collapses to drawer on mobile
-  - Tables scroll horizontally with sticky headers
-  - KPI cards stack on small screens
-
-* **React 18 Upgrade** (NEW):
-  - `ReactDOM.render` replaced with `createRoot`
-
 * **Scheduled Reports Management**:
   - View all scheduled reports with details
   - Search across report categories, titles, and schedule names
@@ -103,17 +54,16 @@ job-trigger-app/
 * **Generated Reports Management**:
   - View all generated reports
   - Search and filter generated reports
-  - Download reports as text files or CSV
+  - Download reports as text files
   - Delete generated reports
   - Pagination support
 
 * **UI Features**:
-  - Clean, responsive tabbed interface with 4 tabs (Dashboard, Reports, Generated, Scheduled)
+  - Clean, responsive tabbed interface
   - Real-time search filtering
   - Configurable entries per page (10, 15, 25, 50)
   - Date/time formatting
-  - CSS custom properties for cohesive color system
-  - Smooth transitions and hover effects throughout
+  - Inline actions for each report
 
 ## API Integration
 
