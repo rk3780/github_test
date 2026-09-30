@@ -57,12 +57,6 @@ function GenericReportDetail({ data, onBack, currentUser, onGenerate, onSchedule
 
     return (
         <div className="ikm-report-detail-wrapper">
-            <IkmFilterSidebar
-                reportId={report.id}
-                currentUser={currentUser}
-                onGenerate={onGenerate}
-                onSchedule={onSchedule}
-            />
             <div className="ikm-report-detail-main">
                 <div className="ikm-detail-back-bar">
                     <span className="ikm-detail-back-link" onClick={onBack}>{'\u2190'} Back to Reports</span>

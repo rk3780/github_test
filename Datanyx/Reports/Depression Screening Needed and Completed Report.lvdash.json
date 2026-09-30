@@ -131,7 +131,7 @@
           },
           "position": {
             "x": 0,
-            "y": 1,
+            "y": 2,
             "width": 3,
             "height": 2
           }
@@ -174,7 +174,7 @@
           },
           "position": {
             "x": 3,
-            "y": 1,
+            "y": 2,
             "width": 3,
             "height": 2
           }
@@ -217,7 +217,7 @@
           },
           "position": {
             "x": 6,
-            "y": 1,
+            "y": 2,
             "width": 3,
             "height": 2
           }
@@ -260,7 +260,7 @@
           },
           "position": {
             "x": 9,
-            "y": 1,
+            "y": 2,
             "width": 3,
             "height": 2
           }
@@ -346,7 +346,7 @@
           },
           "position": {
             "x": 4,
-            "y": 3,
+            "y": 4,
             "width": 8,
             "height": 4
           }
@@ -422,7 +422,7 @@
           },
           "position": {
             "x": 0,
-            "y": 7,
+            "y": 8,
             "width": 6,
             "height": 4
           }
@@ -508,7 +508,7 @@
           },
           "position": {
             "x": 6,
-            "y": 7,
+            "y": 8,
             "width": 6,
             "height": 4
           }
@@ -625,7 +625,7 @@
           },
           "position": {
             "x": 0,
-            "y": 11,
+            "y": 12,
             "width": 12,
             "height": 6
           }
@@ -698,7 +698,7 @@
           },
           "position": {
             "x": 0,
-            "y": 3,
+            "y": 4,
             "width": 4,
             "height": 4
           }
@@ -740,6 +740,22 @@
                   }
                 ]
               }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 1,
+            "width": 12,
+            "height": 1
+          }
+        },
+        {
+          "widget": {
+            "name": "6e33af2a",
+            "multilineTextboxSpec": {
+              "lines": [
+                "<a href=\"https://personalized-reports-manager-7474646396737277.aws.databricksapps.com\" target=\"_self\">App Link</a>"
+              ]
             }
           },
           "position": {

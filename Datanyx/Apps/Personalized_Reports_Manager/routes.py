@@ -9,6 +9,7 @@ import logging
 from db import sanitize_sql, execute_sql
 from config import REPORT_CATALOG, CATEGORY_ORDER
 from generators import generate_generic_report
+from embed import get_scoped_token, get_dashboard_id_for_report
 
 bp = Blueprint('api', __name__)
 
@@ -390,58 +391,18 @@ def get_report_details(report_id):
             },
         }})
     elif report_id == 4:
-        summary_result = execute_sql("""
-            SELECT COUNT(*) AS total_records, COUNT(DISTINCT MRN) AS total_patients,
-                   COUNT_IF(Depression_Screening_Completed = 'Yes') AS screenings_completed,
-                   COUNT_IF(Depression_Screening_Completed = 'No') AS screenings_needed
-            FROM workspace.default.depression_screening_report
-        """)
-        summary = summary_result['data'][0] if summary_result['success'] and summary_result['data'] else {}
-        location_result = execute_sql("""
-            SELECT Appointment_Location, Depression_Screening_Completed, COUNT(*) AS cnt
-            FROM workspace.default.depression_screening_report
-            GROUP BY Appointment_Location, Depression_Screening_Completed
-            ORDER BY Appointment_Location, Depression_Screening_Completed
-        """)
-        status_by_location = location_result['data'] if location_result['success'] else []
-        tools_result = execute_sql("""
-            SELECT COALESCE(Screening_Tool_Used, 'None') AS Screening_Tool_Used, COUNT(*) AS cnt
-            FROM workspace.default.depression_screening_report
-            GROUP BY Screening_Tool_Used ORDER BY cnt DESC
-        """)
-        tools_distribution = tools_result['data'] if tools_result['success'] else []
-        sex_result = execute_sql("""
-            SELECT Sex_At_Birth, Depression_Screening_Completed, COUNT(*) AS cnt
-            FROM workspace.default.depression_screening_report
-            GROUP BY Sex_At_Birth, Depression_Screening_Completed
-            ORDER BY Sex_At_Birth, Depression_Screening_Completed
-        """)
-        completion_by_sex = sex_result['data'] if sex_result['success'] else []
-        overview_result = execute_sql("""
-            SELECT Depression_Screening_Completed, COUNT(*) AS cnt
-            FROM workspace.default.depression_screening_report
-            GROUP BY Depression_Screening_Completed
-        """)
-        status_overview = overview_result['data'] if overview_result['success'] else []
-        patients_result = execute_sql("""
-            SELECT Last_Name, First_Name, MRN, DOB, Sex_At_Birth,
-                   Appointment_Date_Time, Appointment_Location, Appointment_Provider_Resource,
-                   Depression_Screening_Completed, Screening_Tool_Used, Plan_Date
-            FROM workspace.default.depression_screening_report
-            ORDER BY Appointment_Date_Time DESC
-        """)
-        patient_list = patients_result['data'] if patients_result['success'] else []
+        # Depression Screening - embedded Databricks AI/BI dashboard
         return jsonify({'success': True, 'data': {
-            'report': report, 'in_progress': False, 'report_type': 'depression_screening',
-            'summary': {
-                'total_patients': int(summary.get('total_patients', 0)),
-                'screenings_completed': int(summary.get('screenings_completed', 0)),
-                'screenings_needed': int(summary.get('screenings_needed', 0)),
-                'total_records': int(summary.get('total_records', 0)),
-            },
-            'status_by_location': status_by_location, 'tools_distribution': tools_distribution,
-            'completion_by_sex': completion_by_sex, 'status_overview': status_overview,
-            'patient_list': patient_list,
+            'report': report,
+            'in_progress': False,
+            'report_type': 'embedded_dashboard',
+        }})
+    elif report_id == 25:
+        # Precision Medicine Orders & Results - embedded Databricks AI/BI dashboard
+        return jsonify({'success': True, 'data': {
+            'report': report,
+            'in_progress': False,
+            'report_type': 'embedded_dashboard',
         }})
     else:
         filters = {
@@ -452,6 +413,28 @@ def get_report_details(report_id):
         }
         data = generate_generic_report(report, report_id, filters)
         return jsonify({'success': True, 'data': data})
+
+
+@bp.route('/api/reports/<int:report_id>/embed-token', methods=['GET'])
+@handle_errors
+def get_embed_token(report_id):
+    import os
+    report = next((r for r in REPORT_CATALOG if r['id'] == report_id), None)
+    if not report:
+        return jsonify({'success': False, 'error': 'Report not found'}), 404
+    external_viewer_id = request.args.get('external_viewer_id')
+    external_value = request.args.get('external_value')
+    try:
+        token = get_scoped_token(report_id, external_viewer_id=external_viewer_id, external_value=external_value)
+        return jsonify({
+            'success': True,
+            'token': token,
+            'instance_url': os.environ.get('DATABRICKS_INSTANCE_URL', ''),
+            'workspace_id': os.environ.get('DATABRICKS_WORKSPACE_ID', ''),
+            'dashboard_id': get_dashboard_id_for_report(report_id),
+        })
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)}), 500
 
 
 @bp.route('/api/reports/<int:report_id>/generate', methods=['POST'])

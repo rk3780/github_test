@@ -834,6 +834,48 @@ function App() {
                                     setReportDetails(null);
                                 }}
                             />
+                        ) : reportDetails.report_type === 'embedded_dashboard' ? (
+                            <EmbeddedDashboard
+                                report={reportDetails.report}
+                                onBack={() => {
+                                    setSelectedReportId(null);
+                                    setReportDetails(null);
+                                }}
+                                currentUser={currentUser}
+                                onNotify={showToast}
+                                onGenerate={async () => {
+                                    if (!currentUser) { showToast('Please sign in first', 'warning'); return; }
+                                    try {
+                                        const response = await fetch(`/api/reports/${selectedReportId}/generate`, {
+                                            method: 'POST',
+                                            headers: { 'Content-Type': 'application/json' },
+                                            body: JSON.stringify({ user_id: currentUser.user_id, user_name: currentUser.name })
+                                        });
+                                        const result = await response.json();
+                                        if (result.success) {
+                                            showToast('Report generated! Check the Generated Reports tab.');
+                                        } else {
+                                            showToast('Error: ' + result.error, 'error');
+                                        }
+                                    } catch (err) {
+                                        showToast('Error generating report: ' + err.message, 'error');
+                                    }
+                                }}
+                                onSchedule={async (scheduleData) => {
+                                    if (!currentUser) { showToast('Please sign in first', 'warning'); return; }
+                                    const response = await fetch(`/api/reports/${selectedReportId}/schedule`, {
+                                        method: 'POST',
+                                        headers: { 'Content-Type': 'application/json' },
+                                        body: JSON.stringify({ user_id: currentUser.user_id, user_name: currentUser.name, ...scheduleData })
+                                    });
+                                    const result = await response.json();
+                                    if (result.success) {
+                                        showToast('Report scheduled! Check the Practice Scheduled Reports tab.');
+                                    } else {
+                                        throw new Error(result.error || 'Scheduling failed');
+                                    }
+                                }}
+                            />
                         ) : reportDetails.report_type && reportDetails.report_type.startsWith('generic_') ? (
                             <GenericReportDetail
                                 data={reportDetails}

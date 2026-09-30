@@ -17,7 +17,11 @@
       "displayName": "Regimen Margins",
       "queryLines": [
         "SELECT\n",
-        "  *\n",
+        "  regimen,\n",
+        "  margin,\n",
+        "  site,\n",
+        "  payer,\n",
+        "  margin_date AS metric_date\n",
         "FROM\n",
         "  regimen_margins"
       ],
@@ -29,7 +33,10 @@
       "displayName": "Payer Mix",
       "queryLines": [
         "SELECT\n",
-        "  *\n",
+        "  payer_type,\n",
+        "  percentage,\n",
+        "  site,\n",
+        "  mix_date AS metric_date\n",
         "FROM\n",
         "  payer_mix"
       ],
@@ -61,6 +68,48 @@
       "schema": "default"
     }
   ],
+  "relationshipGraphs": [
+    {
+      "sources": [
+        {
+          "name": "KPI_Metrics",
+          "datasetName": "kpi_metrics"
+        },
+        {
+          "name": "Regimen_Margins",
+          "datasetName": "regimen_margins"
+        },
+        {
+          "name": "Payer_Mix",
+          "datasetName": "payer_mix"
+        },
+        {
+          "name": "Site_List",
+          "datasetName": "site_list"
+        },
+        {
+          "name": "Payer_List",
+          "datasetName": "payer_list"
+        }
+      ],
+      "relationships": [
+        {
+          "name": "relationship_0",
+          "from": "KPI_Metrics",
+          "to": "Regimen_Margins",
+          "on": "`KPI_Metrics`.`site` = `Regimen_Margins`.`site` AND `KPI_Metrics`.`payer` = `Regimen_Margins`.`payer`",
+          "cardinality": "CARDINALITY_MANY_TO_ONE"
+        },
+        {
+          "name": "relationship_1",
+          "from": "KPI_Metrics",
+          "to": "Payer_Mix",
+          "on": "`KPI_Metrics`.`site` = `Payer_Mix`.`site`",
+          "cardinality": "CARDINALITY_MANY_TO_ONE"
+        }
+      ]
+    }
+  ],
   "pages": [
     {
       "name": "54dc1fad",
@@ -73,15 +122,14 @@
               {
                 "name": "main_query",
                 "query": {
-                  "datasetName": "kpi_metrics",
                   "fields": [
                     {
-                      "name": "sum(prior_value)",
-                      "expression": "SUM(`prior_value`)"
+                      "name": "sum(KPI_Metrics__prior_value)",
+                      "expression": "SUM(`KPI_Metrics`.`prior_value`)"
                     },
                     {
-                      "name": "sum(current_value)",
-                      "expression": "SUM(`current_value`)"
+                      "name": "sum(KPI_Metrics__current_value)",
+                      "expression": "SUM(`KPI_Metrics`.`current_value`)"
                     }
                   ],
                   "disaggregated": false
@@ -94,10 +142,10 @@
               "widgetType": "counter",
               "encodings": {
                 "value": {
-                  "fieldName": "sum(current_value)"
+                  "fieldName": "sum(KPI_Metrics__current_value)"
                 },
                 "target": {
-                  "fieldName": "sum(prior_value)",
+                  "fieldName": "sum(KPI_Metrics__prior_value)",
                   "change": {
                     "type": "percent",
                     "style": {
@@ -134,7 +182,7 @@
           },
           "position": {
             "x": 0,
-            "y": 2,
+            "y": 4,
             "width": 3,
             "height": 4
           }
@@ -146,15 +194,14 @@
               {
                 "name": "main_query",
                 "query": {
-                  "datasetName": "kpi_metrics",
                   "fields": [
                     {
-                      "name": "sum(prior_value)",
-                      "expression": "SUM(`prior_value`)"
+                      "name": "sum(KPI_Metrics__prior_value)",
+                      "expression": "SUM(`KPI_Metrics`.`prior_value`)"
                     },
                     {
-                      "name": "sum(current_value)",
-                      "expression": "SUM(`current_value`)"
+                      "name": "sum(KPI_Metrics__current_value)",
+                      "expression": "SUM(`KPI_Metrics`.`current_value`)"
                     }
                   ],
                   "disaggregated": false
@@ -167,7 +214,7 @@
               "widgetType": "counter",
               "encodings": {
                 "value": {
-                  "fieldName": "sum(current_value)",
+                  "fieldName": "sum(KPI_Metrics__current_value)",
                   "format": {
                     "type": "number-currency",
                     "currencyCode": "USD",
@@ -179,7 +226,7 @@
                   }
                 },
                 "target": {
-                  "fieldName": "sum(prior_value)",
+                  "fieldName": "sum(KPI_Metrics__prior_value)",
                   "change": {
                     "type": "percent",
                     "style": {
@@ -216,7 +263,7 @@
           },
           "position": {
             "x": 3,
-            "y": 2,
+            "y": 4,
             "width": 3,
             "height": 4
           }
@@ -228,15 +275,14 @@
               {
                 "name": "main_query",
                 "query": {
-                  "datasetName": "kpi_metrics",
                   "fields": [
                     {
-                      "name": "avg(prior_value)",
-                      "expression": "AVG(`prior_value`)"
+                      "name": "avg(KPI_Metrics__prior_value)",
+                      "expression": "AVG(`KPI_Metrics`.`prior_value`)"
                     },
                     {
-                      "name": "avg(current_value)",
-                      "expression": "AVG(`current_value`)"
+                      "name": "avg(KPI_Metrics__current_value)",
+                      "expression": "AVG(`KPI_Metrics`.`current_value`)"
                     }
                   ],
                   "disaggregated": false
@@ -249,11 +295,11 @@
               "widgetType": "counter",
               "encodings": {
                 "value": {
-                  "fieldName": "avg(current_value)",
+                  "fieldName": "avg(KPI_Metrics__current_value)",
                   "formatTemplate": "{{ @formatted }}s"
                 },
                 "target": {
-                  "fieldName": "avg(prior_value)",
+                  "fieldName": "avg(KPI_Metrics__prior_value)",
                   "change": {
                     "type": "percent",
                     "style": {
@@ -285,7 +331,7 @@
           },
           "position": {
             "x": 6,
-            "y": 2,
+            "y": 4,
             "width": 3,
             "height": 4
           }
@@ -297,15 +343,14 @@
               {
                 "name": "main_query",
                 "query": {
-                  "datasetName": "kpi_metrics",
                   "fields": [
                     {
-                      "name": "avg(prior_value)",
-                      "expression": "AVG(`prior_value`)"
+                      "name": "avg(KPI_Metrics__prior_value)",
+                      "expression": "AVG(`KPI_Metrics`.`prior_value`)"
                     },
                     {
-                      "name": "avg(current_value)",
-                      "expression": "AVG(`current_value`)"
+                      "name": "avg(KPI_Metrics__current_value)",
+                      "expression": "AVG(`KPI_Metrics`.`current_value`)"
                     }
                   ],
                   "disaggregated": false
@@ -313,16 +358,18 @@
               }
             ],
             "spec": {
-              "frame": {},
+              "frame": {
+                "showTitle": false
+              },
               "version": 2,
               "widgetType": "counter",
               "encodings": {
                 "value": {
-                  "fieldName": "avg(current_value)",
+                  "fieldName": "avg(KPI_Metrics__current_value)",
                   "formatTemplate": "{{ @formatted }}%"
                 },
                 "target": {
-                  "fieldName": "avg(prior_value)",
+                  "fieldName": "avg(KPI_Metrics__prior_value)",
                   "change": {
                     "type": "percent",
                     "style": {
@@ -354,7 +401,7 @@
           },
           "position": {
             "x": 9,
-            "y": 2,
+            "y": 4,
             "width": 3,
             "height": 4
           }
@@ -366,15 +413,14 @@
               {
                 "name": "main_query",
                 "query": {
-                  "datasetName": "payer_mix",
                   "fields": [
                     {
-                      "name": "sum(percentage)",
-                      "expression": "SUM(`percentage`)"
+                      "name": "sum(Payer_Mix__percentage)",
+                      "expression": "SUM(`Payer_Mix`.`percentage`)"
                     },
                     {
-                      "name": "payer_type",
-                      "expression": "`payer_type`"
+                      "name": "Payer_Mix__payer_type",
+                      "expression": "`Payer_Mix`.`payer_type`"
                     }
                   ],
                   "disaggregated": false
@@ -387,13 +433,13 @@
               "widgetType": "pie",
               "encodings": {
                 "angle": {
-                  "fieldName": "sum(percentage)",
+                  "fieldName": "sum(Payer_Mix__percentage)",
                   "scale": {
                     "type": "quantitative"
                   }
                 },
                 "color": {
-                  "fieldName": "payer_type",
+                  "fieldName": "Payer_Mix__payer_type",
                   "scale": {
                     "type": "categorical"
                   }
@@ -406,7 +452,7 @@
           },
           "position": {
             "x": 7,
-            "y": 6,
+            "y": 8,
             "width": 5,
             "height": 6
           }
@@ -418,15 +464,14 @@
               {
                 "name": "main_query",
                 "query": {
-                  "datasetName": "regimen_margins",
                   "fields": [
                     {
-                      "name": "regimen",
-                      "expression": "`regimen`"
+                      "name": "Regimen_Margins__regimen",
+                      "expression": "`Regimen_Margins`.`regimen`"
                     },
                     {
-                      "name": "sum(margin)",
-                      "expression": "SUM(`margin`)"
+                      "name": "sum(Regimen_Margins__margin)",
+                      "expression": "SUM(`Regimen_Margins`.`margin`)"
                     }
                   ],
                   "disaggregated": false
@@ -445,21 +490,21 @@
               "widgetType": "bar",
               "encodings": {
                 "x": {
-                  "fieldName": "regimen",
+                  "fieldName": "Regimen_Margins__regimen",
                   "displayName": "regimen",
                   "scale": {
                     "type": "categorical"
                   }
                 },
                 "y": {
-                  "fieldName": "sum(margin)",
+                  "fieldName": "sum(Regimen_Margins__margin)",
                   "displayName": "margin",
                   "scale": {
                     "type": "quantitative"
                   }
                 },
                 "color": {
-                  "fieldName": "regimen",
+                  "fieldName": "Regimen_Margins__regimen",
                   "displayName": "regimen",
                   "scale": {
                     "type": "categorical"
@@ -473,7 +518,7 @@
           },
           "position": {
             "x": 0,
-            "y": 6,
+            "y": 8,
             "width": 7,
             "height": 6
           }
@@ -483,13 +528,13 @@
             "name": "conversational_prompt",
             "multilineTextboxSpec": {
               "lines": [
-                "💬  Ask: *\"Which regimens drove the largest margin change last quarter?\"* "
+                "💬  Ask: *\"Which regimens drove the largest margin change last quarter?\"*"
               ]
             }
           },
           "position": {
             "x": 0,
-            "y": 0,
+            "y": 2,
             "width": 6,
             "height": 2
           }
@@ -520,7 +565,10 @@
               "version": 2,
               "frame": {
                 "showTitle": true,
-                "title": "Last 90d"
+                "title": {
+                  "fields": [],
+                  "value": "Last 90d"
+                }
               },
               "widgetType": "filter-date-range-picker",
               "encodings": {
@@ -535,7 +583,7 @@
           },
           "position": {
             "x": 6,
-            "y": 0,
+            "y": 2,
             "width": 2,
             "height": 2
           }
@@ -566,7 +614,10 @@
               "version": 2,
               "frame": {
                 "showTitle": true,
-                "title": "All Sites"
+                "title": {
+                  "fields": [],
+                  "value": "All Sites"
+                }
               },
               "widgetType": "filter-multi-select",
               "encodings": {
@@ -581,7 +632,7 @@
           },
           "position": {
             "x": 8,
-            "y": 0,
+            "y": 2,
             "width": 2,
             "height": 2
           }
@@ -612,7 +663,10 @@
               "version": 2,
               "frame": {
                 "showTitle": true,
-                "title": "All Payers"
+                "title": {
+                  "fields": [],
+                  "value": "All Payers"
+                }
               },
               "widgetType": "filter-multi-select",
               "encodings": {
@@ -627,8 +681,26 @@
           },
           "position": {
             "x": 10,
-            "y": 0,
+            "y": 2,
             "width": 2,
+            "height": 2
+          }
+        },
+        {
+          "widget": {
+            "name": "app_link",
+            "multilineTextboxSpec": {
+              "lines": [
+                "🔗 [Open Personalized Reports Manager](https://personalized-reports-manager-7474646396737277.aws.databricksapps.com/)\n",
+                "\n",
+                "<a href=\"https://dbc-3bfadd9a-e170.cloud.databricks.com/editor/dashboardsv3/01f1a6b507501db9a393dc0d826eaa30/published?o=7474646396737277\">📊 Depression Screening Report</a>"
+              ]
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 0,
+            "width": 3,
             "height": 2
           }
         }
@@ -639,7 +711,93 @@
   ],
   "uiSettings": {
     "theme": {
-      "widgetHeaderAlignment": "ALIGNMENT_UNSPECIFIED"
+      "canvasBackgroundColor": {
+        "light": "#1A242C",
+        "dark": "#1A242C"
+      },
+      "widgetBackgroundColor": {
+        "light": "#12181D",
+        "dark": "#12181D"
+      },
+      "widgetBorderColor": {
+        "light": "#11171C",
+        "dark": "#11171C"
+      },
+      "fontColor": {
+        "light": "#E8ECF0",
+        "dark": "#E8ECF0"
+      },
+      "selectionColor": {
+        "light": "#9877C1",
+        "dark": "#9877C1"
+      },
+      "visualizationColors": [
+        "#0B4B60",
+        "#1A6892",
+        "#4D8CC0",
+        "#9580CE",
+        "#CC90C2",
+        "#EAB0D0",
+        "#F8DAE8"
+      ],
+      "widgetHeaderAlignment": "LEFT",
+      "fontFamily": "Space Grotesk",
+      "widgetPadding": 8,
+      "widgetMargin": 4,
+      "widgetCornerRadius": 0,
+      "widgetShadow": 0,
+      "continuousGradient": {
+        "lightMode": {
+          "fromCategoricalIndex": 0
+        },
+        "darkMode": {
+          "fromCategoricalIndex": 0
+        }
+      },
+      "fontSettings": {
+        "base": {
+          "fontFamily": "Space Grotesk",
+          "fontColor": {
+            "light": "#E8ECF0",
+            "dark": "#E8ECF0"
+          },
+          "fontSize": 14,
+          "fontWeight": 400
+        },
+        "widgetTitle": {
+          "fontSize": 16,
+          "fontWeight": 500
+        },
+        "widgetDescription": {
+          "fontSize": 14,
+          "fontWeight": 400
+        },
+        "fieldTitle": {
+          "textCase": "TEXT_CASE_UPPERCASE",
+          "fontColor": {
+            "light": "#D1D4D8",
+            "dark": "#D1D4D8"
+          },
+          "fontSize": 13,
+          "fontWeight": 400
+        },
+        "fieldValue": {
+          "fontColor": {
+            "light": "#D1D4D8",
+            "dark": "#D1D4D8"
+          },
+          "fontSize": 13,
+          "fontWeight": 400
+        }
+      },
+      "gridLineColor": {
+        "light": "#383E42",
+        "dark": "#383E42"
+      },
+      "axisLineColor": {
+        "light": "#515960",
+        "dark": "#515960"
+      }
     },
     "applyModeEnabled": false
   }

@@ -5,6 +5,22 @@ command:
 env:
   - name: DATABRICKS_WAREHOUSE_ID
     value: "08dbc90a76824f08"
+  - name: DATABRICKS_INSTANCE_URL
+    value: "https://dbc-3bfadd9a-e170.cloud.databricks.com"
+  - name: DATABRICKS_WORKSPACE_ID
+    value: "7474646396737277"
+  - name: DATABRICKS_DASHBOARD_ID
+    value: "01f1ab77f6181dffbc49eb682d78ff21"
+  - name: DATABRICKS_DASHBOARD_ID_DS
+    value: "01f1a6b507501db9a393dc0d826eaa30"
+  # Optional: Set these to use scoped tokens (more secure).
+  # Create a service principal in the Databricks Admin Console with an OAuth
+  # secret, then fill in the values below. If left as placeholders, the app
+  # falls back to using its own runtime token for embedding.
+  - name: DATABRICKS_SP_CLIENT_ID
+    value: "32ee5b7d-cca7-4e70-939d-5bcc8fd220c0"
+  - name: DATABRICKS_SP_CLIENT_SECRET
+    value: "dosecec164d82b277aeb268a1e3f4ad8a2de"
 
 resources:
   - name: jobs

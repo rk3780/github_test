@@ -16,6 +16,11 @@
     <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+    <!-- Databricks AI/BI Dashboard embedding SDK (ES module, exposed globally) -->
+    <script type="module">
+        import { DatabricksDashboard } from "https://cdn.jsdelivr.net/npm/@databricks/aibi-client@0.0.0-alpha.7/+esm";
+        window.DatabricksDashboardSDK = { DatabricksDashboard };
+    </script>
 </head>
 <body>
     <div id="root"><div style="position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);color:#666;font-size:16px">Loading application...</div></div>
@@ -33,6 +38,7 @@
             '{{ url_for("static", filename="js/components/IkmReportDetail.js") }}',
             '{{ url_for("static", filename="js/components/DepressionScreeningDetail.js") }}',
             '{{ url_for("static", filename="js/components/GenericReportDetail.js") }}',
+            '{{ url_for("static", filename="js/components/EmbeddedDashboard.js") }}',
             '{{ url_for("static", filename="js/App.js") }}'
         ];
         Promise.all(files.map(function(f) {
